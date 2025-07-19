@@ -1,10 +1,12 @@
 import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
-import { useAction } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "../convex/_generated/api";
 
 export default function App() {
     const [email, setEmail] = useState("georgia.martinez@atomicobject.com");
+    const [password, setPassword] = useState("password");
+
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{
         type: "success" | "error";
@@ -12,6 +14,27 @@ export default function App() {
     } | null>(null);
 
     const sendEmailAction = useAction(api.sendEmail.sendEmail);
+    const signUpMutation = useMutation(api.signUp.signUp);
+
+    const handleSignUp = async () => {
+        setLoading(true);
+        setMessage(null);
+
+        try {
+            await signUpMutation({
+                email: email,
+                password: password,
+            });
+            setMessage({ type: "success", text: "Sign up successful!" });
+        } catch (error: any) {
+            setMessage({
+                type: "error",
+                text: error.message || "Sign up failed",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSendEmail = async () => {
         if (!email) {
@@ -91,9 +114,18 @@ export default function App() {
                 variant="outlined"
                 placeholder="your@email.com"
             />
+            <TextField
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                fullWidth
+                variant="outlined"
+                placeholder="your@email.com"
+            />
             <Button
                 variant="contained"
-                onClick={() => void handleSendEmail()}
+                onClick={() => void handleSignUp()}
                 disabled={loading}
                 fullWidth
                 size="large"
