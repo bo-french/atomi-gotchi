@@ -1,37 +1,84 @@
-import { SignUpForm } from "@/login/SignUpForm";
-import { LoginMessage } from "@/types/login";
-import { Alert, Stack, Typography } from "@mui/material";
-import { useAction } from "convex/react";
-import { useState } from "react";
-import { api } from "../convex/_generated/api";
+import { Box } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { HomePage } from "./pages/HomePage";
+import { LoginPage } from "./pages/LoginPage";
+import { SignUpPage } from "./pages/SignUpPage";
+
+// Simple auth state management
+const useAuth = () => {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      setUser(JSON.parse(currentUser));
+    }
+    setLoading(false);
+  }, []);
+
+  return { user, loading };
+};
+
+// Protected Route Component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return user ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+// Public Route Component (redirect if authenticated)
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return user ? <Navigate to="/home" replace /> : <>{children}</>;
+};
 
 export default function App() {
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<LoginMessage | null>(null);
+  return (
+    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/sign-up"
+          element={
+            <PublicRoute>
+              <SignUpPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+        {/* Protected Routes */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-    const sendEmailAction = useAction(api.sendEmail.sendEmail);
-
-    const handleSignUpSubmit = (message: LoginMessage) => {
-        setMessage(message);
-    };
-
-    return (
-        <Stack
-            sx={{
-                alignItems: "center",
-                padding: 4,
-                gap: 2,
-                maxWidth: 400,
-                margin: "0 auto",
-            }}
-        >
-            <Typography variant="h2">🐾 Atomi-gochi</Typography>
-            {message && (
-                <Alert severity={message.type} sx={{ width: "100%" }}>
-                    {message.text}
-                </Alert>
-            )}
-            <SignUpForm onSubmit={setMessage} />
-        </Stack>
-    );
+        {/* Catch all route */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </Box>
+  );
 }
