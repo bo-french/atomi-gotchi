@@ -1,83 +1,18 @@
-import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
-import { useAction, useMutation } from "convex/react";
+import { SignUpForm } from "@/login/SignUpForm";
+import { LoginMessage } from "@/types/login";
+import { Alert, Stack, Typography } from "@mui/material";
+import { useAction } from "convex/react";
 import { useState } from "react";
 import { api } from "../convex/_generated/api";
 
 export default function App() {
-    const [email, setEmail] = useState("georgia.martinez@atomicobject.com");
-    const [password, setPassword] = useState("password");
-
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<{
-        type: "success" | "error";
-        text: string;
-    } | null>(null);
+    const [message, setMessage] = useState<LoginMessage | null>(null);
 
     const sendEmailAction = useAction(api.sendEmail.sendEmail);
-    const signUpMutation = useMutation(api.signUp.signUp);
 
-    const handleSignUp = async () => {
-        setLoading(true);
-        setMessage(null);
-
-        try {
-            await signUpMutation({
-                email: email,
-                password: password,
-            });
-            setMessage({ type: "success", text: "Sign up successful!" });
-        } catch (error: any) {
-            setMessage({
-                type: "error",
-                text: error.message || "Sign up failed",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleSendEmail = async () => {
-        if (!email) {
-            setMessage({
-                type: "error",
-                text: "Please enter an email address",
-            });
-            return;
-        }
-
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setMessage({
-                type: "error",
-                text: "Please enter a valid email address",
-            });
-            return;
-        }
-
-        setLoading(true);
-        setMessage(null);
-
-        try {
-            const result = await sendEmailAction({ email });
-
-            if (result.success) {
-                setMessage({
-                    type: "success",
-                    text: "Email sent successfully! 🎉",
-                });
-                setEmail(""); // Clear the input
-            } else {
-                setMessage({
-                    type: "error",
-                    text: result.error || "Failed to send email",
-                });
-            }
-        } catch (error) {
-            setMessage({ type: "error", text: "An unexpected error occurred" });
-        } finally {
-            setLoading(false);
-        }
+    const handleSignUpSubmit = (message: LoginMessage) => {
+        setMessage(message);
     };
 
     return (
@@ -90,48 +25,13 @@ export default function App() {
                 margin: "0 auto",
             }}
         >
-            <Typography variant="h2">🐾 Email Pet</Typography>
-            <Typography
-                variant="body1"
-                sx={{ textAlign: "center", color: "text.secondary" }}
-            >
-                Enter your email to receive a welcome message from your virtual
-                pet!
-            </Typography>
-
+            <Typography variant="h2">🐾 Atomi-gochi</Typography>
             {message && (
                 <Alert severity={message.type} sx={{ width: "100%" }}>
                     {message.text}
                 </Alert>
             )}
-
-            <TextField
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                fullWidth
-                variant="outlined"
-                placeholder="your@email.com"
-            />
-            <TextField
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                fullWidth
-                variant="outlined"
-                placeholder="your@email.com"
-            />
-            <Button
-                variant="contained"
-                onClick={() => void handleSignUp()}
-                disabled={loading}
-                fullWidth
-                size="large"
-            >
-                {loading ? "Sending..." : "Send Welcome Email 📧"}
-            </Button>
+            <SignUpForm onSubmit={setMessage} />
         </Stack>
     );
 }
