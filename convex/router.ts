@@ -1,6 +1,5 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
-import { internal } from "./_generated/api";
 
 const http = httpRouter();
 
@@ -22,13 +21,13 @@ http.route({
       }
       
       // Extract command from email body (first word)
-      const command = emailBody.trim().split(/\s+/)[0].toLowerCase();
+      // const command = emailBody.trim().split(/\s+/)[0].toLowerCase();
       
-      // Process the command
-      await ctx.runAction(internal.petSystem.processEmailCommand, {
-        userEmail,
-        command,
-      });
+      // // Process the command
+      // await ctx.runAction(internal.petSystem.processEmailCommand, {
+      //   userEmail,
+      //   command,
+      // });
       
       return new Response("OK", { status: 200 });
     } catch (error) {
