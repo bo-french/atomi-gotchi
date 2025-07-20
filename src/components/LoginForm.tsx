@@ -98,8 +98,9 @@ export const LoginForm = (props: Props) => {
         disabled={!isFormValid || loading}
         fullWidth
         size="large"
+        sx={{ color: "white" }}
       >
-        {loading ? "Signing in..." : "Sign In"}
+        {loading ? "Logging in..." : "Login"}
       </Button>
     </form>
   );

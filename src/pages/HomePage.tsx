@@ -1,17 +1,11 @@
-import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { useAction } from "convex/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
 
 export const HomePage = () => {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   const sendEmailAction = useAction(api.sendEmail.sendEmail);
   const navigate = useNavigate();
@@ -29,46 +23,14 @@ export const HomePage = () => {
   };
 
   const handleSendEmail = async () => {
-    if (!email) {
-      setMessage({
-        type: "error",
-        text: "Please enter an email address",
-      });
+    if (!user?.email) {
       return;
     }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMessage({
-        type: "error",
-        text: "Please enter a valid email address",
-      });
-      return;
-    }
-
-    setLoading(true);
-    setMessage(null);
 
     try {
-      const result = await sendEmailAction({ email });
-
-      if (result.success) {
-        setMessage({
-          type: "success",
-          text: "Email sent successfully! 🎉",
-        });
-        setEmail("");
-      } else {
-        setMessage({
-          type: "error",
-          text: result.error || "Failed to send email",
-        });
-      }
+      await sendEmailAction({ email: user?.email });
     } catch (error) {
-      setMessage({ type: "error", text: "An unexpected error occurred" });
-    } finally {
-      setLoading(false);
+      console.error(error);
     }
   };
 
@@ -109,30 +71,13 @@ export const HomePage = () => {
         Send a welcome email with your virtual pet to any email address!
       </Typography>
 
-      {message && (
-        <Alert severity={message.type} sx={{ width: "100%" }}>
-          {message.text}
-        </Alert>
-      )}
-
-      <TextField
-        label="Recipient Email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        fullWidth
-        variant="outlined"
-        placeholder="friend@email.com"
-      />
-
       <Button
         variant="contained"
         onClick={() => void handleSendEmail()}
-        disabled={loading}
         fullWidth
         size="large"
       >
-        {loading ? "Sending..." : "Send Welcome Email 📧"}
+        Send Welcome Email 📧
       </Button>
     </Stack>
   );

@@ -27,7 +27,7 @@ export const SignUpForm = (props: Props) => {
   } = useForm<SignUpFormData>({
     mode: "onBlur",
     defaultValues: {
-      email: "georgia.martinez@atomicobject.com",
+      email: "",
       password: "",
       confirmPassword: "",
     },
@@ -115,6 +115,7 @@ export const SignUpForm = (props: Props) => {
         disabled={!isValid || !isDirty || loading}
         fullWidth
         size="large"
+        sx={{ color: "white" }}
       >
         {loading ? "..." : "Sign up"}
       </Button>
