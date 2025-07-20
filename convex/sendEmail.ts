@@ -3,6 +3,7 @@
 import { v } from "convex/values";
 import { Resend } from "resend";
 import { action } from "./_generated/server";
+import { emailTemplates } from "./emailTemplates";
 
 export const sendEmail = action({
   args: {
@@ -23,16 +24,7 @@ export const sendEmail = action({
         from: "Virtual Pet <onboarding@resend.dev>", // Replace with your verified domain
         to: [args.email],
         subject: args.subject || "Hello from your Virtual Pet! 🐾",
-        html:
-          args.message ||
-          `
-          <h1>🐾 Your Virtual Pet Says Hello!</h1>
-          <p>Welcome to the Virtual Pet Email Game!</p>
-          <p>Your virtual pet is excited to meet you and can't wait to start this adventure together.</p>
-          <p>Take good care of your pet by feeding, playing, and keeping them happy!</p>
-          <br>
-          <p>Happy gaming! 🎮</p>
-        `,
+        html: args.message || emailTemplates.default,
       });
 
       if (error) {

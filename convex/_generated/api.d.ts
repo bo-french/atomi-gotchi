@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as emailTemplates from "../emailTemplates.js";
 import type * as http from "../http.js";
 import type * as mutations_checkForExistingPet from "../mutations/checkForExistingPet.js";
 import type * as mutations_login from "../mutations/login.js";
@@ -31,6 +32,7 @@ import type * as sendEmail from "../sendEmail.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  emailTemplates: typeof emailTemplates;
   http: typeof http;
   "mutations/checkForExistingPet": typeof mutations_checkForExistingPet;
   "mutations/login": typeof mutations_login;
