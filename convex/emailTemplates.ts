@@ -1,5 +1,6 @@
 // TODO: Change this to be the main branch before merging
-const GIF_FOLDER = "https://raw.githubusercontent.com/bo-french/atomi-gotchi/email-pet-gif/public/gifs/";
+const GIF_FOLDER =
+  "https://raw.githubusercontent.com/bo-french/atomi-gotchi/email-pet-gif/public/gifs/";
 
 export const emailTemplates = {
   default: `

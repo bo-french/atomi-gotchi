@@ -6,7 +6,7 @@ export default defineSchema({
     email: v.string(),
     password: v.string(),
   }).index("by_email", ["email"]),
-  
+
   pets: defineTable({
     email: v.string(),
   }).index("by_email", ["email"]),

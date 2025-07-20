@@ -7,10 +7,16 @@ import { Link } from "react-router-dom";
 
 export const SignUpPage = () => {
   const [message, setMessage] = useState<LoginMessage | undefined>(undefined);
+  const [hideSignUpForm, setHideSignUpForm] = useState(false);
+
+  const onSignUp = (message: LoginMessage) => {
+    setMessage(message);
+    setHideSignUpForm(message.type === "success");
+  };
 
   return (
     <Panel message={message}>
-      <SignUpForm onSubmit={setMessage} />
+      {!hideSignUpForm && <SignUpForm onSubmit={onSignUp} />}
       <Stack direction="row" alignItems="center">
         <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
           Already have an account?
