@@ -18,5 +18,27 @@ export const theme = createTheme({
       color: "#31a2f2",
       fontFamily: SUPERFROG_FONT_FAMILY,
     },
+    h6: {
+      color: "#000000 !important",
+      fontSize: "1.25rem",
+      fontWeight: 500,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+        contained: {
+          color: "white",
+          boxShadow: "none",
+        },
+      },
+      defaultProps: {
+        size: "large",
+        fullWidth: true,
+      },
+    },
   },
 });

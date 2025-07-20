@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
@@ -45,7 +45,11 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 
 export default function App() {
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+    <Stack
+      minHeight="100vh"
+      justifyContent="center"
+      sx={{ backgroundColor: "primary.main" }}
+    >
       <Routes>
         {/* Public Routes */}
         <Route
@@ -79,6 +83,6 @@ export default function App() {
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-    </Box>
+    </Stack>
   );
 }

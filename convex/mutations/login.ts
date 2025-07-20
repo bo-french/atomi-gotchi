@@ -1,7 +1,7 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation } from "../_generated/server";
 
-export const signUp = mutation({
+export const login = mutation({
   args: {
     email: v.string(),
     password: v.string(),
@@ -16,32 +16,33 @@ export const signUp = mutation({
   ),
   handler: async (ctx, args) => {
     try {
-      const existing = await ctx.db
+      const user = await ctx.db
         .query("users")
         .withIndex("by_email", (q) => q.eq("email", args.email))
         .first();
 
-      if (existing) {
+      if (!user) {
         return {
           success: false,
-          error: "A user with that email already exists",
+          error: "No account found with this email",
         };
       }
 
-      const userId = await ctx.db.insert("users", {
-        email: args.email,
-        password: args.password,
-      });
+      if (user.password !== args.password) {
+        return {
+          success: false,
+          error: "Invalid password",
+        };
+      }
 
       return {
         success: true,
-        userId,
+        userId: user._id,
       };
     } catch (error) {
       return {
         success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        error: error instanceof Error ? error.message : "Login failed",
       };
     }
   },

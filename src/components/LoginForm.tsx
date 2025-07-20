@@ -17,7 +17,7 @@ interface LoginFormData {
 
 export const LoginForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
-  const loginMutation = useMutation(api.login.login);
+  const loginMutation = useMutation(api.mutations.login.login);
   const navigate = useNavigate();
 
   const { register, handleSubmit, watch } = useForm<LoginFormData>({
@@ -42,7 +42,6 @@ export const LoginForm = (props: Props) => {
 
       if (result?.success) {
         props.onSubmit({ type: "success", text: "Login successful!" });
-        // Store user session (simple approach - in production use proper auth)
         localStorage.setItem(
           "currentUser",
           JSON.stringify({
@@ -50,7 +49,6 @@ export const LoginForm = (props: Props) => {
             email: data.email,
           })
         );
-        // Redirect to home page
         void navigate("/home");
       } else {
         props.onSubmit({

@@ -15,10 +15,11 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
-import type * as login from "../login.js";
+import type * as mutations_checkForExistingPet from "../mutations/checkForExistingPet.js";
+import type * as mutations_login from "../mutations/login.js";
+import type * as mutations_signUp from "../mutations/signUp.js";
 import type * as router from "../router.js";
 import type * as sendEmail from "../sendEmail.js";
-import type * as signUp from "../signUp.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -31,10 +32,11 @@ import type * as signUp from "../signUp.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
-  login: typeof login;
+  "mutations/checkForExistingPet": typeof mutations_checkForExistingPet;
+  "mutations/login": typeof mutations_login;
+  "mutations/signUp": typeof mutations_signUp;
   router: typeof router;
   sendEmail: typeof sendEmail;
-  signUp: typeof signUp;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

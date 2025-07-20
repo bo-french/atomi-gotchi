@@ -1,4 +1,4 @@
-import { AuthFormBox } from "@/components/AuthFormBox";
+import { Panel } from "@/components/Panel";
 import { SignUpForm } from "@/components/SignUpForm";
 import { LoginMessage } from "@/types/login";
 import { Button, Stack, Typography } from "@mui/material";
@@ -9,25 +9,16 @@ export const SignUpPage = () => {
   const [message, setMessage] = useState<LoginMessage | undefined>(undefined);
 
   return (
-    <Stack
-      height="100vh"
-      justifyContent="center"
-      sx={{ backgroundColor: "primary.main" }}
-    >
-      <AuthFormBox message={message}>
-        <SignUpForm onSubmit={setMessage} />
-      <Typography variant="body2" sx={{ mt: 2 }}>
-        Already have an account?
-        <Button
-          component={Link}
-          to="/login"
-          variant="text"
-          sx={{ textTransform: "none" }}
-        >
-          Sign in here
-          </Button>
+    <Panel message={message}>
+      <SignUpForm onSubmit={setMessage} />
+      <Stack direction="row" alignItems="center">
+        <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
+          Already have an account?
         </Typography>
-      </AuthFormBox>
-    </Stack>
+        <Button component={Link} to="/login" variant="text">
+          Login here
+        </Button>
+      </Stack>
+    </Panel>
   );
 };

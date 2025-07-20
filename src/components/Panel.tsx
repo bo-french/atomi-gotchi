@@ -8,7 +8,7 @@ interface Props {
   message?: LoginMessage;
 }
 
-export const AuthFormBox = (props: Props) => {
+export const Panel = (props: Props) => {
   return (
     <Stack
       gap={2}

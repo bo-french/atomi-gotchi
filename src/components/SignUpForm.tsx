@@ -17,7 +17,7 @@ interface SignUpFormData {
 
 export const SignUpForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
-  const signUpMutation = useMutation(api.signUp.signUp);
+  const signUpMutation = useMutation(api.mutations.signUp.signUp);
 
   const {
     register,
