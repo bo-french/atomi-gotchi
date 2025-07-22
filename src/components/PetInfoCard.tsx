@@ -12,7 +12,7 @@ export const PetInfoCard = (props: Props) => {
         {props.petInfo.name}
       </Typography>
       <img src="/gifs/pet.gif" alt="Virtual Pet" />
-      <Typography variant="body1">{props.petInfo.mood}</Typography>
+      <Typography variant="body1">{getMood(props.petInfo)}</Typography>
       <Stack flexDirection="row" gap={1}>
         <Typography variant="body1">❤️</Typography>
         {getStatusBar(props.petInfo.health)}
@@ -25,16 +25,19 @@ export const PetInfoCard = (props: Props) => {
   );
 };
 
+const getMood = (petInfo: PetInfo) => {
+  return `${petInfo.name} seems happy!`;
+};
+
 const getStatusBar = (stat: number) => {
   const max = 10;
   const percentage = (stat / max) * 100;
 
-  // Determine color based on stat level
-  let color = "#4caf50"; // Green for high (7-10)
+  let color = "#4caf50";
   if (percentage <= 30) {
-    color = "#f44336"; // Red for low (0-3)
+    color = "#f44336";
   } else if (percentage <= 60) {
-    color = "#ff9800"; // Orange/Yellow for medium (4-6)
+    color = "#ff9800";
   }
 
   return (

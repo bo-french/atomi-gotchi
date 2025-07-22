@@ -1,25 +1,21 @@
 import { Panel } from "@/components/Panel";
 import { PetCreationForm } from "@/components/PetCreationForm";
 import { PetInfoCard } from "@/components/PetInfoCard";
+import { PetInfo } from "@/types/petInfo";
 import { Button, Stack } from "@mui/material";
 import { useAction, useMutation } from "convex/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
 
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
-  const [pet, setPet] = useState<{ id: Id<"pets">; name: string } | undefined>(
-    undefined
-  );
+  const [pet, setPet] = useState<PetInfo | undefined>(undefined);
 
   const sendEmailAction = useAction(api.sendEmail.sendEmail);
   const navigate = useNavigate();
 
-  const checkForExistingPetMutation = useMutation(
-    api.mutations.checkForExistingPet.checkForExistingPet
-  );
+  const getPetMutation = useMutation(api.mutations.getPet.getPet);
 
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
@@ -29,18 +25,18 @@ export const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    const checkForExistingPet = async () => {
+    const getPet = async () => {
       if (!user?.email) return;
 
-      const result = await checkForExistingPetMutation({
+      const result = await getPetMutation({
         email: user.email,
       });
 
       setPet(result?.pet);
     };
 
-    void checkForExistingPet();
-  }, [user, checkForExistingPetMutation]);
+    void getPet();
+  }, [user, getPetMutation]);
 
   const handleSendEmail = async () => {
     if (!user?.email) {
@@ -59,21 +55,27 @@ export const HomePage = () => {
     void navigate("/login");
   };
 
+  const handleSettings = () => {};
+
   return (
     <Panel>
       {pet ? (
-        <Stack gap={1}>
+        <Stack gap={2}>
           <PetInfoCard
             petInfo={{
               name: pet.name,
-              mood: "Sparky seems happy!",
-              health: 9,
-              hunger: 6,
+              health: pet.health,
+              hunger: pet.hunger,
             }}
           />
-          <Button variant="outlined" onClick={handleSignOut}>
-            Sign Out
-          </Button>
+          <Stack direction="row" gap={1}>
+            <Button variant="contained" onClick={handleSettings}>
+              Settings
+            </Button>
+            <Button variant="outlined" onClick={handleSignOut}>
+              Sign Out
+            </Button>
+          </Stack>
         </Stack>
       ) : (
         <PetCreationForm />

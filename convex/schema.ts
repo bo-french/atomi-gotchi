@@ -10,5 +10,7 @@ export default defineSchema({
   pets: defineTable({
     userId: v.id("users"),
     name: v.string(),
+    health: v.number(),
+    hunger: v.number(),
   }).index("by_userId", ["userId"]),
 });

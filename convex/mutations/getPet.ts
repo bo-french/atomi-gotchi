@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
 
-export const checkForExistingPet = mutation({
+export const getPet = mutation({
   args: {
     email: v.string(),
   },
@@ -10,6 +10,8 @@ export const checkForExistingPet = mutation({
       v.object({
         id: v.id("pets"),
         name: v.string(),
+        health: v.number(),
+        hunger: v.number(),
       })
     ),
     success: v.boolean(),
@@ -17,7 +19,6 @@ export const checkForExistingPet = mutation({
   }),
   handler: async (ctx, args) => {
     try {
-      // First find the user by email
       const user = await ctx.db
         .query("users")
         .withIndex("by_email", (q) => q.eq("email", args.email))
@@ -30,7 +31,6 @@ export const checkForExistingPet = mutation({
         };
       }
 
-      // Then check if the user has any pets
       const existingPet = await ctx.db
         .query("pets")
         .withIndex("by_userId", (q) => q.eq("userId", user._id))
@@ -41,6 +41,8 @@ export const checkForExistingPet = mutation({
           ? {
               id: existingPet._id,
               name: existingPet.name,
+              health: existingPet.health,
+              hunger: existingPet.hunger,
             }
           : undefined,
         success: existingPet !== null,

@@ -31,6 +31,8 @@ export const createPet = mutation({
 
       const petId = await ctx.db.insert("pets", {
         name: args.petName,
+        health: 100,
+        hunger: 100,
         userId: user._id,
       });
 
