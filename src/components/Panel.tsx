@@ -5,10 +5,13 @@ import { ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
+  showLogo?: boolean;
   message?: LoginMessage;
 }
 
 export const Panel = (props: Props) => {
+  const { showLogo = false } = props;
+
   return (
     <Stack
       gap={2}
@@ -20,7 +23,7 @@ export const Panel = (props: Props) => {
       borderRadius={4}
       sx={{ backgroundColor: "white", boxShadow: 3 }}
     >
-      <Logo />
+      {showLogo && <Logo />}
       {props.message && (
         <Alert severity={props.message.type} sx={{ width: "100%" }}>
           {props.message.text}

@@ -9,6 +9,7 @@ export const theme = createTheme({
   palette: {
     primary: {
       main: "#31a2f2",
+      dark: "#1976d2",
     },
   },
   typography: {

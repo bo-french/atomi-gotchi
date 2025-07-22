@@ -1,6 +1,6 @@
-import { Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { AnimatedBackground } from "./components/AnimatedBackground";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
@@ -45,11 +45,7 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 
 export default function App() {
   return (
-    <Stack
-      minHeight="100vh"
-      justifyContent="center"
-      sx={{ backgroundColor: "primary.main" }}
-    >
+    <AnimatedBackground>
       <Routes>
         {/* Public Routes */}
         <Route
@@ -83,6 +79,6 @@ export default function App() {
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-    </Stack>
+    </AnimatedBackground>
   );
 }

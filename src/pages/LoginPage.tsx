@@ -9,7 +9,7 @@ export const LoginPage = () => {
   const [message, setMessage] = useState<LoginMessage | undefined>(undefined);
 
   return (
-    <Panel message={message}>
+    <Panel message={message} showLogo>
       <LoginForm onSubmit={setMessage} />
       <Stack direction="row" alignItems="center">
         <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>

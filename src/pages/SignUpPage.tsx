@@ -15,7 +15,7 @@ export const SignUpPage = () => {
   };
 
   return (
-    <Panel message={message}>
+    <Panel message={message} showLogo>
       {!hideSignUpForm && <SignUpForm onSubmit={onSignUp} />}
       <Stack direction="row" alignItems="center">
         <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
