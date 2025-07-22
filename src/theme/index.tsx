@@ -28,6 +28,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: "none",
+          height: "42px",
         },
         contained: {
           color: "white",
@@ -36,6 +37,19 @@ export const theme = createTheme({
       },
       defaultProps: {
         size: "large",
+        fullWidth: true,
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            height: "42px",
+          },
+        },
+      },
+      defaultProps: {
+        size: "small",
         fullWidth: true,
       },
     },
