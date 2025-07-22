@@ -23,5 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+# Convex
+convex/_generated
+
 # Ignored for the template, you probably want to remove it:
 package-lock.json
