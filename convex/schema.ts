@@ -8,6 +8,9 @@ export default defineSchema({
   }).index("by_email", ["email"]),
 
   pets: defineTable({
-    email: v.string(),
-  }).index("by_email", ["email"]),
+    userId: v.id("users"),
+    name: v.string(),
+    health: v.number(),
+    hunger: v.number(),
+  }).index("by_userId", ["userId"]),
 });
