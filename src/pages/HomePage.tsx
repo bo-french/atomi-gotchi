@@ -1,14 +1,18 @@
 import { Panel } from "@/components/Panel";
+import { PetCreationForm } from "@/components/PetCreationForm";
 import { PetInfoCard } from "@/components/PetInfoCard";
-import { Button, Stack, Typography } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { useAction, useMutation } from "convex/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
+import { Id } from "../../convex/_generated/dataModel";
 
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
-  const [hasExistingPet, setHasExistingPet] = useState(false);
+  const [pet, setPet] = useState<{ id: Id<"pets">; name: string } | undefined>(
+    undefined
+  );
 
   const sendEmailAction = useAction(api.sendEmail.sendEmail);
   const navigate = useNavigate();
@@ -18,23 +22,25 @@ export const HomePage = () => {
   );
 
   useEffect(() => {
-    const checkForExistingPet = async () => {
-      const result = await checkForExistingPetMutation({
-        email: user?.email,
-      });
-
-      setHasExistingPet(result?.success);
-    };
-
-    void checkForExistingPet();
-  }, []);
-
-  useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
     if (currentUser) {
       setUser(JSON.parse(currentUser));
     }
   }, []);
+
+  useEffect(() => {
+    const checkForExistingPet = async () => {
+      if (!user?.email) return;
+
+      const result = await checkForExistingPetMutation({
+        email: user.email,
+      });
+
+      setPet(result?.pet);
+    };
+
+    void checkForExistingPet();
+  }, [user, checkForExistingPetMutation]);
 
   const handleSendEmail = async () => {
     if (!user?.email) {
@@ -48,10 +54,6 @@ export const HomePage = () => {
     }
   };
 
-  const handleSettings = () => {
-    // TODO: create a settings page to navigate to
-  };
-
   const handleSignOut = () => {
     localStorage.removeItem("currentUser");
     void navigate("/login");
@@ -59,26 +61,23 @@ export const HomePage = () => {
 
   return (
     <Panel>
-      <PetInfoCard
-        petInfo={{
-          name: "Sparky",
-          mood: "Sparky seems happy!",
-          health: 9,
-          hunger: 6,
-        }}
-      />
-      {hasExistingPet ? (
-        <Button variant="contained" onClick={() => void handleSettings()}>
-          Settings
-        </Button>
+      {pet ? (
+        <Stack gap={1}>
+          <PetInfoCard
+            petInfo={{
+              name: pet.name,
+              mood: "Sparky seems happy!",
+              health: 9,
+              hunger: 6,
+            }}
+          />
+          <Button variant="outlined" onClick={handleSignOut}>
+            Sign Out
+          </Button>
+        </Stack>
       ) : (
-        <Button variant="contained" onClick={() => void handleSendEmail()}>
-          Send Email
-        </Button>
+        <PetCreationForm />
       )}
-      <Button variant="outlined" onClick={handleSignOut}>
-        Sign Out
-      </Button>
     </Panel>
   );
 };

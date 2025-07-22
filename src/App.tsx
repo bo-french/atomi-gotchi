@@ -1,3 +1,4 @@
+import { ROUTES } from "@/types/navigation";
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AnimatedBackground } from "./components/AnimatedBackground";
@@ -49,7 +50,7 @@ export default function App() {
       <Routes>
         {/* Public Routes */}
         <Route
-          path="/sign-up"
+          path={ROUTES.signup}
           element={
             <PublicRoute>
               <SignUpPage />
@@ -57,7 +58,7 @@ export default function App() {
           }
         />
         <Route
-          path="/login"
+          path={ROUTES.login}
           element={
             <PublicRoute>
               <LoginPage />
@@ -66,7 +67,7 @@ export default function App() {
         />
         {/* Protected Routes */}
         <Route
-          path="/home"
+          path={ROUTES.home}
           element={
             <ProtectedRoute>
               <HomePage />

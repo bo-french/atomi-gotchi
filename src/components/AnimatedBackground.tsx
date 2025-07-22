@@ -37,7 +37,7 @@ export const AnimatedBackground = ({ children }: AnimatedBackgroundProps) => {
             ) 0 0/180px 180px
           `,
           transform: "rotate(45deg)",
-          animation: "scrollDown 5s linear infinite",
+          animation: "scrollDown 8s linear infinite",
           "&::before": {
             content: '""',
             position: "absolute",

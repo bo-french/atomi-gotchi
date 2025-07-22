@@ -80,7 +80,6 @@ export const LoginForm = (props: Props) => {
         placeholder="your@email.com"
         sx={{ mb: 2 }}
       />
-
       <TextField
         label="Password"
         type="password"
@@ -89,7 +88,6 @@ export const LoginForm = (props: Props) => {
         variant="outlined"
         sx={{ mb: 2 }}
       />
-
       <Button
         type="submit"
         variant="contained"
