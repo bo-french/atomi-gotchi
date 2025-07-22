@@ -1,7 +1,7 @@
 import js from "@eslint/js";
-import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -11,7 +11,6 @@ export default tseslint.config(
       "eslint.config.js",
       "convex/_generated",
       "postcss.config.js",
-      "tailwind.config.js",
       "vite.config.ts",
     ],
   },
@@ -73,5 +72,5 @@ export default tseslint.config(
       // for consistency (esp. Convex `handler`s)
       "@typescript-eslint/require-await": "off",
     },
-  },
+  }
 );
