@@ -1,4 +1,4 @@
-import { Panel } from "@/components/Panel";
+import { PanelCard } from "@/components/PanelCard";
 import { PetCreationForm } from "@/components/PetCreationForm";
 import { PetInfoCard } from "@/components/PetInfoCard";
 import { PetInfo } from "@/types/petInfo";
@@ -58,7 +58,7 @@ export const HomePage = () => {
   const handleSettings = () => {};
 
   return (
-    <Panel>
+    <PanelCard>
       {pet ? (
         <Stack gap={2}>
           <PetInfoCard
@@ -80,6 +80,6 @@ export const HomePage = () => {
       ) : (
         <PetCreationForm />
       )}
-    </Panel>
+    </PanelCard>
   );
 };
