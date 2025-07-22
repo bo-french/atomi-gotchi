@@ -14,6 +14,7 @@ export const SimonSaysPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [displayedSquare, setDisplayedSquare] = useState<string>("");
+  const [canClickSquares, setCanClickSquares] = useState(false);
 
   const addRandomSquareToSequence = () => {
     const randomSquare = Math.floor(Math.random() * squares.length) + 1;
@@ -21,6 +22,8 @@ export const SimonSaysPage = () => {
   };
 
   const repeatSequence = () => {
+    setCanClickSquares(false);
+
     sequence.forEach((squareId, index) => {
       setTimeout(() => {
         switch (squareId) {
@@ -41,6 +44,12 @@ export const SimonSaysPage = () => {
         setTimeout(() => {
           setDisplayedSquare("");
         }, 800);
+
+        if (index === sequence.length - 1) {
+          setTimeout(() => {
+            setCanClickSquares(true);
+          }, 800);
+        }
       }, index * 1000);
     });
   };
@@ -124,17 +133,21 @@ export const SimonSaysPage = () => {
             sx={{
               backgroundColor: square.color,
               borderRadius: 2,
-              cursor: "pointer",
+              cursor: canClickSquares ? "pointer" : "not-allowed",
               transition: "all 0.2s ease",
-              "&:hover": {
-                backgroundColor: square.activeColor,
-                transform: "scale(1.05)",
-              },
-              "&:active": {
-                transform: "scale(0.95)",
-              },
+              opacity: canClickSquares ? 1 : 0.6,
+              pointerEvents: canClickSquares ? "auto" : "none",
+              ...(canClickSquares && {
+                "&:hover": {
+                  backgroundColor: square.activeColor,
+                  transform: "scale(1.05)",
+                },
+                "&:active": {
+                  transform: "scale(0.95)",
+                },
+              }),
             }}
-            onClick={() => checkInputtedSequence(square.id)}
+            onClick={() => canClickSquares && checkInputtedSequence(square.id)}
           />
         ))}
       </Box>
