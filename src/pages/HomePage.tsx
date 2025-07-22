@@ -1,9 +1,10 @@
+import { Panel } from "@/components/Panel";
+import { PetInfoCard } from "@/components/PetInfoCard";
 import { Button, Stack, Typography } from "@mui/material";
 import { useAction, useMutation } from "convex/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
-import { Panel } from "@/components/Panel";
 
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
@@ -58,14 +59,14 @@ export const HomePage = () => {
 
   return (
     <Panel>
-      <Stack sx={{ alignItems: "center", gap: 1 }}>
-        <Typography variant="h6" sx={{ color: "primary.main" }}>
-          Welcome back 👋
-        </Typography>
-        <Typography variant="h6" sx={{ color: "primary.main" }}>
-          {user?.email}
-        </Typography>
-      </Stack>
+      <PetInfoCard
+        petInfo={{
+          name: "Sparky",
+          mood: "Sparky seems happy!",
+          health: 9,
+          hunger: 6,
+        }}
+      />
       {hasExistingPet ? (
         <Button variant="contained" onClick={() => void handleSettings()}>
           Settings

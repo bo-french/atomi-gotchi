@@ -1,4 +1,4 @@
-import { fontCSS, SUPERFROG_FONT_FAMILY } from "@/theme/fonts";
+import { fontCSS, MIGHTY_SOULY_FONT_FAMILY } from "@/theme/fonts";
 import { createTheme } from "@mui/material";
 
 const style = document.createElement("style");
@@ -11,18 +11,16 @@ export const theme = createTheme({
       main: "#31a2f2",
       dark: "#1976d2",
     },
+    text: {
+      primary: "#000000",
+    },
   },
   typography: {
     h1: {
       fontSize: "3rem",
       fontWeight: 700,
       color: "#31a2f2",
-      fontFamily: SUPERFROG_FONT_FAMILY,
-    },
-    h6: {
-      color: "#000000 !important",
-      fontSize: "1.25rem",
-      fontWeight: 500,
+      fontFamily: MIGHTY_SOULY_FONT_FAMILY,
     },
   },
   components: {
