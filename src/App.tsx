@@ -5,6 +5,7 @@ import { AnimatedBackground } from "./components/AnimatedBackground";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
+import CookingPage from "./pages/CookingPage";
 
 // Simple auth state management
 const useAuth = () => {
@@ -71,6 +72,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.cooking}
+          element={
+            <ProtectedRoute>
+              <CookingPage />
             </ProtectedRoute>
           }
         />
