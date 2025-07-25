@@ -16,16 +16,17 @@ interface Treat {
 const fruits: Fruit[] = [
   { emoji: "🍎", name: "Apple" },
   { emoji: "🍌", name: "Banana" },
-  { emoji: "🍇", name: "Grapes" },
+  { emoji: "🍊", name: "Orange" },
   { emoji: "🍓", name: "Strawberry" },
+  { emoji: "🍒", name: "Cherry" },
   { emoji: "🍍", name: "Pineapple" },
 ];
 
 const combinations: Record<string, Treat> = {
-  "🍎🍌": { emoji: "🍰", name: "Fruit Cake" },
-  "🍇🍓": { emoji: "🍧", name: "Berry Ice" },
-  "🍍🍌": { emoji: "🍹", name: "Tropical Smoothie" },
-  // Add more combinations as desired
+  "🍎🍌": { emoji: "🍰", name: "Classic Candy" },
+  "🍊🍎": { emoji: "🍧", name: "Opposite Candy" },
+  "🍒🍓": { emoji: "🍹", name: "Berry Candy" },
+  "🍍🍌": { emoji: "🍹", name: "Tropical Candy" },
 };
 
 export default function CookingPage() {
