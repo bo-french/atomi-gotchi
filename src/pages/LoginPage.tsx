@@ -1,13 +1,13 @@
 import { LoginForm } from "@/components/LoginForm";
 import { PanelCard } from "@/components/PanelCard";
-import { LoginMessage } from "@/types/login";
+import { RequestMessage } from "@/types/login";
 import { ROUTES } from "@/types/navigation";
 import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const LoginPage = () => {
-  const [message, setMessage] = useState<LoginMessage | undefined>(undefined);
+  const [message, setMessage] = useState<RequestMessage | undefined>(undefined);
 
   return (
     <PanelCard message={message} showLogo>

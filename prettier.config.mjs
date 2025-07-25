@@ -1,8 +1,5 @@
 // Change to use dynamic import instead of assert syntax
-const gtsConfigUrl = new URL(
-  "./node_modules/gts/.prettierrc.json",
-  import.meta.url
-);
+const gtsConfigUrl = new URL("./node_modules/gts/.prettierrc.json", import.meta.url);
 const gtsConfigData = JSON.parse(
   await import("fs").then((fs) => fs.promises.readFile(gtsConfigUrl, "utf-8"))
 );
@@ -19,7 +16,7 @@ const config = {
   tabWidth: 2,
   semi: true,
   singleQuote: false,
-  printWidth: 100,
+  printWidth: 80,
   proseWrap: "always",
   useTabs: false,
   bracketSpacing: true,

@@ -1,22 +1,26 @@
 import { ROUTES } from "@/types/navigation";
 import { ArrowBack } from "@mui/icons-material";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export const BackToHome = () => {
+interface Props {
+  onClick?: () => void;
+}
+
+export const BackToHome = (props: Props) => {
   const navigate = useNavigate();
 
   return (
     <Button
       variant="contained"
-      onClick={() => void navigate(ROUTES.home)}
+      onClick={props.onClick ?? (() => void navigate(ROUTES.home))}
       sx={{
         gap: 1,
         width: "fit-content",
       }}
     >
       <ArrowBack />
-      <Typography variant="h6">Home</Typography>
+      Home
     </Button>
   );
 };

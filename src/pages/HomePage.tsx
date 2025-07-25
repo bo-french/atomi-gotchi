@@ -1,6 +1,7 @@
 import { PanelCard } from "@/components/PanelCard";
 import { PetCreationForm } from "@/components/PetCreationForm";
 import { PetInfoCard } from "@/components/PetInfoCard";
+import { RequestMessage } from "@/types/login";
 import { PetInfo } from "@/types/petInfo";
 import { Button, CircularProgress, Stack } from "@mui/material";
 import { useMutation } from "convex/react";
@@ -10,8 +11,11 @@ import { api } from "../../convex/_generated/api";
 
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
+
   const [pet, setPet] = useState<PetInfo | undefined>(undefined);
   const [isLoadingPet, setIsLoadingPet] = useState(false);
+
+  const [message, setMessage] = useState<RequestMessage | undefined>(undefined);
 
   const navigate = useNavigate();
 
@@ -47,8 +51,12 @@ export const HomePage = () => {
 
   const handleSettings = () => {};
 
+  const handleSubmitPetForm = (message: RequestMessage) => {
+    setMessage(message);
+  };
+
   return (
-    <PanelCard panelSx={{ height: 450 }}>
+    <PanelCard panelSx={{ height: 450 }} message={message}>
       {isLoadingPet ? (
         <CircularProgress />
       ) : pet ? (
@@ -70,7 +78,7 @@ export const HomePage = () => {
           </Stack>
         </Stack>
       ) : (
-        <PetCreationForm user={user} />
+        <PetCreationForm user={user} onSubmitPetForm={handleSubmitPetForm} />
       )}
     </PanelCard>
   );

@@ -8,4 +8,4 @@ export const fontCSS = `
   }
 `;
 
-export const MIGHTY_SOULY_FONT_FAMILY = '"MightySouly", cursive, sans-serif';
+export const MIGHTY_SOULY_FONT_FAMILY = '"MightySouly", sans-serif';
