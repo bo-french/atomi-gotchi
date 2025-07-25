@@ -1,4 +1,4 @@
-import { Panel } from "@/components/Panel";
+import { PanelCard } from "@/components/PanelCard";
 import { SignUpForm } from "@/components/SignUpForm";
 import { LoginMessage } from "@/types/login";
 import { ROUTES } from "@/types/navigation";
@@ -16,7 +16,7 @@ export const SignUpPage = () => {
   };
 
   return (
-    <Panel message={message} showLogo>
+    <PanelCard message={message} showLogo>
       {!hideSignUpForm && <SignUpForm onSubmit={onSignUp} />}
       <Stack direction="row" alignItems="center">
         <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
@@ -26,6 +26,6 @@ export const SignUpPage = () => {
           Login here
         </Button>
       </Stack>
-    </Panel>
+    </PanelCard>
   );
 };

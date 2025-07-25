@@ -1,3 +1,5 @@
+import { Pet } from "@/components/Pet";
+import { PetMood } from "@/types/pet";
 import { PetInfo } from "@/types/petInfo";
 import { Box, Stack, Typography } from "@mui/material";
 
@@ -11,7 +13,8 @@ export const PetInfoCard = (props: Props) => {
       <Typography variant="h1" sx={{ color: "primary.main" }}>
         {props.petInfo.name}
       </Typography>
-      <img src="/gifs/pet.gif" alt="Virtual Pet" />
+      {/* TODO: This mood should eventually come from the pet db table */}
+      <Pet mood={PetMood.HAPPY} />
       <Typography variant="body1">{getMood(props.petInfo)}</Typography>
       <Stack flexDirection="row" gap={1}>
         <Typography variant="body1">❤️</Typography>
