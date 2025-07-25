@@ -1,4 +1,5 @@
-import { Pet, PetMood } from "@/components/Pet";
+import { Pet } from "@/components/Pet";
+import { PetMood } from "@/types/pet";
 import { PetInfo } from "@/types/petInfo";
 import { Box, Stack, Typography } from "@mui/material";
 

@@ -1,6 +1,7 @@
 import { BackToHome } from "@/components/BackToHome";
 import { Panel } from "@/components/Panel";
-import { ANIMATION_TIME, Pet, PetMood } from "@/components/Pet";
+import { Pet } from "@/components/Pet";
+import { PetMood, ANIMATION_TIME } from "@/types/pet";
 import { Box, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 

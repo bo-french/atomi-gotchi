@@ -1,4 +1,5 @@
-import { Pet, PetMood } from "@/components/Pet";
+import { Pet } from "@/components/Pet";
+import { PetMood } from "@/types/pet";
 import { Stack, Typography } from "@mui/material";
 
 export const Logo = () => {
