@@ -15,7 +15,10 @@ export default tseslint.config(
     ],
   },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommendedTypeChecked],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommendedTypeChecked,
+    ],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
@@ -24,7 +27,11 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json", "./convex/tsconfig.json"],
+        project: [
+          "./tsconfig.node.json",
+          "./tsconfig.app.json",
+          "./convex/tsconfig.json",
+        ],
       },
     },
     plugins: {
@@ -33,7 +40,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
       // All of these overrides ease getting into
       // TypeScript, and can be removed for stricter
       // linting down the line.

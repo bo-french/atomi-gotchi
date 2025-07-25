@@ -116,7 +116,11 @@ export const SimonSaysPage = () => {
         gap: 2,
       }}
     >
-      <Stack direction="row" alignItems="center" sx={{ width: "100%", position: "relative" }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        sx={{ width: "100%", position: "relative" }}
+      >
         <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
           <Pet mood={petMood} />
         </Box>

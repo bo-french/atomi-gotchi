@@ -12,6 +12,7 @@ export const getPet = mutation({
         name: v.string(),
         health: v.number(),
         hunger: v.number(),
+        mood: v.string(),
       })
     ),
     success: v.boolean(),
@@ -43,6 +44,7 @@ export const getPet = mutation({
               name: existingPet.name,
               health: existingPet.health,
               hunger: existingPet.hunger,
+              mood: existingPet.mood,
             }
           : undefined,
         success: existingPet !== null,
@@ -50,7 +52,10 @@ export const getPet = mutation({
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Error checking for existing pets",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Error checking for existing pets",
       };
     }
   },

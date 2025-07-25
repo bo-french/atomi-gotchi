@@ -2,7 +2,7 @@ import { PanelCard } from "@/components/PanelCard";
 import { PetCreationForm } from "@/components/PetCreationForm";
 import { PetInfoCard } from "@/components/PetInfoCard";
 import { RequestMessage } from "@/types/login";
-import { PetInfo } from "@/types/petInfo";
+import { mapPetMood, PetInfo } from "@/types/pet";
 import { Button, CircularProgress, Stack } from "@mui/material";
 import { useMutation } from "convex/react";
 import { useEffect, useState } from "react";
@@ -37,7 +37,16 @@ export const HomePage = () => {
         email: user.email,
       });
 
-      setPet(result?.pet);
+      if (!result?.pet) {
+        setIsLoadingPet(false);
+        return;
+      }
+
+      setPet({
+        ...result.pet,
+        mood: mapPetMood(result.pet.mood),
+      });
+
       setIsLoadingPet(false);
     };
 
@@ -66,6 +75,7 @@ export const HomePage = () => {
               name: pet.name,
               health: pet.health,
               hunger: pet.hunger,
+              mood: pet.mood,
             }}
           />
           <Stack direction="row" gap={1}>

@@ -25,11 +25,12 @@ export const PetCreationForm = (props: Props) => {
   const createPetMutation = useMutation(api.mutations.createPet.createPet);
   const sendEmailAction = useAction(api.sendEmail.sendEmail);
 
-  const { register, handleSubmit, watch, setValue } = useForm<PetCreationFormData>({
-    defaultValues: {
-      petName: "",
-    },
-  });
+  const { register, handleSubmit, watch, setValue } =
+    useForm<PetCreationFormData>({
+      defaultValues: {
+        petName: "",
+      },
+    });
 
   const petName = watch("petName");
   const isFormValid = petName.trim() !== "";
@@ -94,7 +95,10 @@ export const PetCreationForm = (props: Props) => {
   };
 
   return (
-    <form onSubmit={(e) => void handleSubmit(onSubmitForm)(e)} style={{ width: "100%" }}>
+    <form
+      onSubmit={(e) => void handleSubmit(onSubmitForm)(e)}
+      style={{ width: "100%" }}
+    >
       <Stack width="100%" alignItems="center" gap={2}>
         <Typography variant="h1" align="center">
           {petCreated ? `${petName} says hello!` : "Create Your Pet!"}
@@ -120,7 +124,12 @@ export const PetCreationForm = (props: Props) => {
                   }}
                 />
               </Box>
-              <Box flex={0.1} display="flex" justifyContent="center" alignItems="center">
+              <Box
+                flex={0.1}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
                 <Button
                   variant="outlined"
                   onClick={() => {
@@ -132,7 +141,11 @@ export const PetCreationForm = (props: Props) => {
                 </Button>
               </Box>
             </Stack>
-            <Button variant="contained" disabled={!isFormValid || loading} type="submit">
+            <Button
+              variant="contained"
+              disabled={!isFormValid || loading}
+              type="submit"
+            >
               {loading ? "Creating your pet..." : "Create"}
             </Button>
           </>
