@@ -3,6 +3,7 @@ import { useMutation } from "convex/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../convex/_generated/api";
+import { Pet, PetMood, TIME_PER_FRAME_MS } from "@/components/Pet.tsx";
 
 interface PetCreationFormData {
   petName: string;
@@ -57,7 +58,7 @@ export const PetCreationForm = () => {
     >
       <Stack width="100%" alignItems="center" gap={2}>
         <Typography variant="h1">Create Your Pet!</Typography>
-        <img src="/gifs/pet.gif" alt="Virtual Pet" />
+        <Pet mood={PetMood.HAPPY} />
         <Stack flexDirection="row" gap={1} width="100%">
           <Box flex={0.9}>
             <TextField
@@ -136,6 +137,8 @@ const randomPetName = () => {
     "Sushi",
     "Gloop",
     "Crouton",
+    "Geoff",
+    "Bloo",
   ];
 
   return petNames[Math.floor(Math.random() * petNames.length)];

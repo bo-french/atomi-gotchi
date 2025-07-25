@@ -1,6 +1,7 @@
 import { Panel } from "@/components/Panel";
 import { Box, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Pet, PetMood, ANIMATION_TIME } from "@/components/Pet.tsx";
 
 const squares = [
   { id: 1, color: "#ff4444", activeColor: "#ff8888" }, // Red
@@ -9,12 +10,16 @@ const squares = [
   { id: 4, color: "#ffff44", activeColor: "#ffff88" }, // Yellow
 ];
 
+const NUM_ROUNDS = 6;
+
 export const SimonSaysPage = () => {
   const [sequence, setSequence] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [displayedSquare, setDisplayedSquare] = useState<string>("");
   const [canClickSquares, setCanClickSquares] = useState(false);
+
+  const [petMood, setPetMood] = useState<PetMood>(PetMood.HAPPY);
 
   const addRandomSquareToSequence = () => {
     const randomSquare = Math.floor(Math.random() * squares.length) + 1;
@@ -75,12 +80,26 @@ export const SimonSaysPage = () => {
       setCurrentIndex(newIndex);
 
       if (newIndex === sequence.length) {
-        setCurrentIndex(0);
-        addRandomSquareToSequence();
+        setPetMood(PetMood.EXCITED);
+
+        if (sequence.length !== NUM_ROUNDS) {
+          setTimeout(() => {
+            setPetMood(PetMood.HAPPY);
+
+            setCurrentIndex(0);
+            addRandomSquareToSequence();
+          }, ANIMATION_TIME * 2);
+        }
       }
     } else {
-      setCurrentIndex(0);
-      repeatSequence();
+      setPetMood(PetMood.SAD);
+
+      setTimeout(() => {
+        setPetMood(PetMood.NEUTRAL);
+
+        setCurrentIndex(0);
+        repeatSequence();
+      }, ANIMATION_TIME * 2);
     }
   };
 
@@ -96,27 +115,20 @@ export const SimonSaysPage = () => {
     >
       <Stack
         direction="row"
-        spacing={2}
         alignItems="center"
-        justifyContent="center"
+        sx={{ width: "100%", position: "relative" }}
       >
-        <img
-          src="/gifs/pet.gif"
-          alt="Virtual Pet"
-          style={{ width: 100, height: 100 }}
-        />
-        <Typography
-          variant="h4"
+        <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <Pet mood={petMood} />
+        </Box>
+        <Box
           sx={{
-            minHeight: "2.125rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            minWidth: "3rem",
+            position: "absolute",
+            right: 150,
           }}
         >
-          {displayedSquare || "\u00A0"}
-        </Typography>
+          <Typography variant="h4">{displayedSquare || "\u00A0"}</Typography>
+        </Box>
       </Stack>
       <Box
         sx={{
