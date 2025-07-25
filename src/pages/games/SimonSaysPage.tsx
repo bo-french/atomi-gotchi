@@ -1,7 +1,7 @@
 import { Panel } from "@/components/Panel";
+import { ANIMATION_TIME, Pet, PetMood } from "@/components/Pet.tsx";
 import { Box, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Pet, PetMood, ANIMATION_TIME } from "@/components/Pet.tsx";
 
 const squares = [
   { id: 1, color: "#ff4444", activeColor: "#ff8888" }, // Red
@@ -13,9 +13,10 @@ const squares = [
 const NUM_ROUNDS = 6;
 
 export const SimonSaysPage = () => {
+  const [isPlaying, setIsPlaying] = useState(true);
+
   const [sequence, setSequence] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [gameStarted, setGameStarted] = useState(false);
   const [displayedSquare, setDisplayedSquare] = useState<string>("");
   const [canClickSquares, setCanClickSquares] = useState(false);
 
@@ -60,11 +61,8 @@ export const SimonSaysPage = () => {
   };
 
   useEffect(() => {
-    if (!gameStarted) {
-      addRandomSquareToSequence();
-      setGameStarted(true);
-    }
-  }, [gameStarted]);
+    addRandomSquareToSequence();
+  }, []);
 
   useEffect(() => {
     if (sequence.length > 0) {
@@ -89,6 +87,9 @@ export const SimonSaysPage = () => {
             setCurrentIndex(0);
             addRandomSquareToSequence();
           }, ANIMATION_TIME * 2);
+        } else {
+          setIsPlaying(false);
+          setCanClickSquares(false);
         }
       }
     } else {
@@ -135,8 +136,9 @@ export const SimonSaysPage = () => {
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
           gap: 2,
-          width: 300,
-          height: 300,
+          width: 350,
+          height: 350,
+          position: "relative",
         }}
       >
         {squares.map((square) => (
@@ -162,6 +164,19 @@ export const SimonSaysPage = () => {
             onClick={() => canClickSquares && checkInputtedSequence(square.id)}
           />
         ))}
+        {!isPlaying && (
+          <Panel
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 250,
+            }}
+          >
+            <Typography variant="h1">You Win!</Typography>
+          </Panel>
+        )}
       </Box>
     </Panel>
   );
