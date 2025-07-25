@@ -1,19 +1,24 @@
 import { Pet } from "@/components/Pet";
+import { PetMood } from "@/types/pet";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { useMutation } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../convex/_generated/api";
-import { PetMood } from "@/types/pet";
 
 interface PetCreationFormData {
   petName: string;
 }
 
-export const PetCreationForm = () => {
+interface Props {
+  user: any; // TODO: this should be typed
+}
+
+export const PetCreationForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
 
   const createPetMutation = useMutation(api.mutations.createPet.createPet);
+  const sendEmailAction = useAction(api.sendEmail.sendEmail);
 
   const { register, handleSubmit, watch, setValue } =
     useForm<PetCreationFormData>({
@@ -24,6 +29,19 @@ export const PetCreationForm = () => {
 
   const petName = watch("petName");
   const isFormValid = petName.trim() !== "";
+
+  // TODO: This email should get sent when the pet is created
+  const handleSendEmail = async () => {
+    if (!props.user?.email) {
+      return;
+    }
+
+    try {
+      await sendEmailAction({ email: props.user?.email });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const onSubmitForm = async (data: PetCreationFormData) => {
     setLoading(true);
@@ -42,6 +60,9 @@ export const PetCreationForm = () => {
         email: user.email,
       });
 
+      /**
+       * TODO: Show them a message to verify if the pet creation was successful with a callback to the PanelCard on the HomePage with the message prop. Send an email with handleSendEmail.Tell them that should have recieved an email. There should be a button to go back to the HomePage (this form is already on the HomePage, so only a reload is needed).
+       */
       if (result?.success) {
         window.location.reload();
       }

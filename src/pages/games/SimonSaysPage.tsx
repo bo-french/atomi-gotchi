@@ -15,7 +15,7 @@ const squares = [
 const NUM_ROUNDS = 6;
 
 export const SimonSaysPage = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const [sequence, setSequence] = useState<number[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);

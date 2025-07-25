@@ -2,8 +2,8 @@ import { PanelCard } from "@/components/PanelCard";
 import { PetCreationForm } from "@/components/PetCreationForm";
 import { PetInfoCard } from "@/components/PetInfoCard";
 import { PetInfo } from "@/types/petInfo";
-import { Button, Stack } from "@mui/material";
-import { useAction, useMutation } from "convex/react";
+import { Button, CircularProgress, Stack } from "@mui/material";
+import { useMutation } from "convex/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
@@ -13,7 +13,6 @@ export const HomePage = () => {
   const [pet, setPet] = useState<PetInfo | undefined>(undefined);
   const [isLoadingPet, setIsLoadingPet] = useState(false);
 
-  const sendEmailAction = useAction(api.sendEmail.sendEmail);
   const navigate = useNavigate();
 
   const getPetMutation = useMutation(api.mutations.getPet.getPet);
@@ -41,18 +40,6 @@ export const HomePage = () => {
     void getPet();
   }, [user, getPetMutation]);
 
-  const handleSendEmail = async () => {
-    if (!user?.email) {
-      return;
-    }
-
-    try {
-      await sendEmailAction({ email: user?.email });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleSignOut = () => {
     localStorage.removeItem("currentUser");
     void navigate("/login");
@@ -61,9 +48,9 @@ export const HomePage = () => {
   const handleSettings = () => {};
 
   return (
-    <PanelCard>
+    <PanelCard panelSx={{ height: 450 }}>
       {isLoadingPet ? (
-        <></>
+        <CircularProgress />
       ) : pet ? (
         <Stack gap={2}>
           <PetInfoCard
@@ -83,7 +70,7 @@ export const HomePage = () => {
           </Stack>
         </Stack>
       ) : (
-        <PetCreationForm />
+        <PetCreationForm user={user} />
       )}
     </PanelCard>
   );
