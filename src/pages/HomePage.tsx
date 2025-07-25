@@ -85,6 +85,7 @@ export const HomePage = () => {
             <Button variant="outlined" onClick={handleSignOut}>
               Sign Out
             </Button>
+            <Button variant="contained" onClick={() => navigate("/rock-paper-scissors")}>Play Rock Paper Scissors</Button>
           </Stack>
         </Stack>
       ) : (

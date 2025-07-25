@@ -6,6 +6,7 @@ import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
 import { SimonSaysPage } from "@/pages/games/SimonSaysPage";
+import { RockPaperScissors } from "@/pages/games/RockPaperScissors";
 
 // Simple auth state management
 const useAuth = () => {
@@ -80,6 +81,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SimonSaysPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path={ROUTES.rockPaperScissors}
+          element={
+            <ProtectedRoute>
+              <RockPaperScissors />
             </ProtectedRoute>
           }
         />
