@@ -1,16 +1,16 @@
 import { PanelCard } from "@/components/PanelCard";
 import { SignUpForm } from "@/components/SignUpForm";
-import { LoginMessage } from "@/types/login";
+import { RequestMessage } from "@/types/login";
 import { ROUTES } from "@/types/navigation";
 import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const SignUpPage = () => {
-  const [message, setMessage] = useState<LoginMessage | undefined>(undefined);
+  const [message, setMessage] = useState<RequestMessage | undefined>(undefined);
   const [hideSignUpForm, setHideSignUpForm] = useState(false);
 
-  const onSignUp = (message: LoginMessage) => {
+  const onSignUp = (message: RequestMessage) => {
     setMessage(message);
     setHideSignUpForm(message.type === "success");
   };

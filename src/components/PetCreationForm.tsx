@@ -1,4 +1,6 @@
+import { BackToHome } from "@/components/BackToHome";
 import { Pet } from "@/components/Pet";
+import { RequestMessage } from "@/types/login";
 import { PetMood } from "@/types/pet";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { useAction, useMutation } from "convex/react";
@@ -12,10 +14,13 @@ interface PetCreationFormData {
 
 interface Props {
   user: any; // TODO: this should be typed
+  onSubmitPetForm: (message: RequestMessage) => void;
 }
 
 export const PetCreationForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
+  const [petCreated, setPetCreated] = useState(false);
+  const [petMood, setPetMood] = useState(PetMood.HAPPY);
 
   const createPetMutation = useMutation(api.mutations.createPet.createPet);
   const sendEmailAction = useAction(api.sendEmail.sendEmail);
@@ -30,14 +35,28 @@ export const PetCreationForm = (props: Props) => {
   const petName = watch("petName");
   const isFormValid = petName.trim() !== "";
 
-  // TODO: This email should get sent when the pet is created
-  const handleSendEmail = async () => {
+  const sendPetCreatedEmail = async () => {
     if (!props.user?.email) {
       return;
     }
 
     try {
-      await sendEmailAction({ email: props.user?.email });
+      const result = await sendEmailAction({ email: props.user?.email });
+
+      if (result?.success) {
+        props.onSubmitPetForm({
+          type: "success",
+          text: `Pet created successfully! We have sent an email to ${props.user?.email} with more information about your pet.`,
+        });
+
+        setPetCreated(true);
+        setPetMood(PetMood.EXCITED);
+      } else {
+        props.onSubmitPetForm({
+          type: "error",
+          text: "Failed to send email",
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -60,11 +79,13 @@ export const PetCreationForm = (props: Props) => {
         email: user.email,
       });
 
-      /**
-       * TODO: Show them a message to verify if the pet creation was successful with a callback to the PanelCard on the HomePage with the message prop. Send an email with handleSendEmail.Tell them that should have recieved an email. There should be a button to go back to the HomePage (this form is already on the HomePage, so only a reload is needed).
-       */
       if (result?.success) {
-        window.location.reload();
+        await sendPetCreatedEmail();
+      } else {
+        props.onSubmitPetForm({
+          type: "error",
+          text: "Pet creation failed",
+        });
       }
     } catch (error) {
       console.error("Error creating pet:", error);
@@ -79,41 +100,58 @@ export const PetCreationForm = (props: Props) => {
       style={{ width: "100%" }}
     >
       <Stack width="100%" alignItems="center" gap={2}>
-        <Typography variant="h1">Create Your Pet!</Typography>
-        <Pet mood={PetMood.HAPPY} />
-        <Stack flexDirection="row" gap={1} width="100%">
-          <Box flex={0.9}>
-            <TextField
-              label="Pet Name"
-              {...register("petName")}
-              fullWidth
-              slotProps={{
-                inputLabel: {
-                  shrink: petName.length > 0,
-                },
-              }}
-            />
-          </Box>
-          <Box
-            flex={0.1}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
+        <Typography variant="h1" align="center">
+          {petCreated ? `${petName} says hello!` : "Create Your Pet!"}
+        </Typography>
+        <Pet mood={petMood} />
+        {!petCreated ? (
+          <>
+            <Stack flexDirection="row" gap={1} width="100%">
+              <Box flex={0.9}>
+                <TextField
+                  label="Pet Name"
+                  {...register("petName")}
+                  fullWidth
+                  slotProps={{
+                    inputLabel: {
+                      shrink: petName.length > 0,
+                    },
+                    input: {
+                      inputProps: {
+                        maxLength: 20,
+                      },
+                    },
+                  }}
+                />
+              </Box>
+              <Box
+                flex={0.1}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setValue("petName", randomPetName());
+                  }}
+                  sx={{ minWidth: "unset", typography: "h5" }}
+                >
+                  🎲
+                </Button>
+              </Box>
+            </Stack>
             <Button
-              variant="outlined"
-              onClick={() => {
-                setValue("petName", randomPetName());
-              }}
-              sx={{ minWidth: "unset", typography: "h5" }}
+              variant="contained"
+              disabled={!isFormValid || loading}
+              type="submit"
             >
-              🎲
+              {loading ? "Creating your pet..." : "Create"}
             </Button>
-          </Box>
-        </Stack>
-        <Button variant="contained" disabled={!isFormValid} type="submit">
-          {loading ? "Creating your pet..." : "Create"}
-        </Button>
+          </>
+        ) : (
+          <BackToHome onClick={() => window.location.reload()} />
+        )}
       </Stack>
     </form>
   );

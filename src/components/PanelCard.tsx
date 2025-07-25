@@ -1,13 +1,13 @@
 import { Logo } from "@/components/Logo";
 import { Panel } from "@/components/Panel";
-import { LoginMessage } from "@/types/login";
+import { RequestMessage } from "@/types/login";
 import { Alert, SxProps } from "@mui/material";
 import { ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
   showLogo?: boolean;
-  message?: LoginMessage;
+  message?: RequestMessage;
   panelSx?: SxProps;
 }
 

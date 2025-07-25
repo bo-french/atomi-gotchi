@@ -1,4 +1,4 @@
-import { LoginMessage } from "@/types/login";
+import { RequestMessage } from "@/types/login";
 import { Button, TextField } from "@mui/material";
 import { useMutation } from "convex/react";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
 
 interface Props {
-  onSubmit: (message: LoginMessage) => void;
+  onSubmit: (message: RequestMessage) => void;
 }
 
 interface LoginFormData {

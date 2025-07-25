@@ -19,7 +19,7 @@ const config = {
   tabWidth: 2,
   semi: true,
   singleQuote: false,
-  printWidth: 100,
+  printWidth: 80,
   proseWrap: "always",
   useTabs: false,
   bracketSpacing: true,
