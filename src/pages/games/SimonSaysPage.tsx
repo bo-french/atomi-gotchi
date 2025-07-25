@@ -1,5 +1,6 @@
+import { BackToHome } from "@/components/BackToHome";
 import { Panel } from "@/components/Panel";
-import { ANIMATION_TIME, Pet, PetMood } from "@/components/Pet.tsx";
+import { ANIMATION_TIME, Pet, PetMood } from "@/components/Pet";
 import { Box, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -175,6 +176,7 @@ export const SimonSaysPage = () => {
             }}
           >
             <Typography variant="h1">You Win!</Typography>
+            <BackToHome />
           </Panel>
         )}
       </Box>

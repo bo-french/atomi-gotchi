@@ -1,5 +1,5 @@
+import { Pet, PetMood } from "@/components/Pet";
 import { Stack, Typography } from "@mui/material";
-import { Pet, PetMood } from "@/components/Pet.tsx";
 
 export const Logo = () => {
   return (

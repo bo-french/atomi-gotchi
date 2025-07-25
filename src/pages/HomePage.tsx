@@ -11,6 +11,7 @@ import { api } from "../../convex/_generated/api";
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
   const [pet, setPet] = useState<PetInfo | undefined>(undefined);
+  const [isLoadingPet, setIsLoadingPet] = useState(false);
 
   const sendEmailAction = useAction(api.sendEmail.sendEmail);
   const navigate = useNavigate();
@@ -28,11 +29,13 @@ export const HomePage = () => {
     const getPet = async () => {
       if (!user?.email) return;
 
+      setIsLoadingPet(true);
       const result = await getPetMutation({
         email: user.email,
       });
 
       setPet(result?.pet);
+      setIsLoadingPet(false);
     };
 
     void getPet();
@@ -59,7 +62,9 @@ export const HomePage = () => {
 
   return (
     <PanelCard>
-      {pet ? (
+      {isLoadingPet ? (
+        <></>
+      ) : pet ? (
         <Stack gap={2}>
           <PetInfoCard
             petInfo={{
