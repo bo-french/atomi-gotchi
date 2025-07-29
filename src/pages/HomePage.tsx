@@ -1,18 +1,22 @@
-import { Panel } from "@/components/Panel";
+import { PanelCard } from "@/components/PanelCard";
 import { PetCreationForm } from "@/components/PetCreationForm";
 import { PetInfoCard } from "@/components/PetInfoCard";
-import { PetInfo } from "@/types/petInfo";
-import { Button, Stack } from "@mui/material";
-import { useAction, useMutation } from "convex/react";
+import { RequestMessage } from "@/types/login";
+import { mapPetMood, PetInfo } from "@/types/pet";
+import { Button, CircularProgress, Stack } from "@mui/material";
+import { useMutation } from "convex/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
 
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
-  const [pet, setPet] = useState<PetInfo | undefined>(undefined);
 
-  const sendEmailAction = useAction(api.sendEmail.sendEmail);
+  const [pet, setPet] = useState<PetInfo | undefined>(undefined);
+  const [isLoadingPet, setIsLoadingPet] = useState(false);
+
+  const [message, setMessage] = useState<RequestMessage | undefined>(undefined);
+
   const navigate = useNavigate();
 
   const getPetMutation = useMutation(api.mutations.getPet.getPet);
@@ -28,27 +32,26 @@ export const HomePage = () => {
     const getPet = async () => {
       if (!user?.email) return;
 
+      setIsLoadingPet(true);
       const result = await getPetMutation({
         email: user.email,
       });
 
-      setPet(result?.pet);
+      if (!result?.pet) {
+        setIsLoadingPet(false);
+        return;
+      }
+
+      setPet({
+        ...result.pet,
+        mood: mapPetMood(result.pet.mood),
+      });
+
+      setIsLoadingPet(false);
     };
 
     void getPet();
   }, [user, getPetMutation]);
-
-  const handleSendEmail = async () => {
-    if (!user?.email) {
-      return;
-    }
-
-    try {
-      await sendEmailAction({ email: user?.email });
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleSignOut = () => {
     localStorage.removeItem("currentUser");
@@ -57,15 +60,22 @@ export const HomePage = () => {
 
   const handleSettings = () => {};
 
+  const handleSubmitPetForm = (message: RequestMessage) => {
+    setMessage(message);
+  };
+
   return (
-    <Panel>
-      {pet ? (
+    <PanelCard panelSx={{ height: 450 }} message={message}>
+      {isLoadingPet ? (
+        <CircularProgress />
+      ) : pet ? (
         <Stack gap={2}>
           <PetInfoCard
             petInfo={{
               name: pet.name,
               health: pet.health,
               hunger: pet.hunger,
+              mood: pet.mood,
             }}
           />
           <Stack direction="row" gap={1}>
@@ -78,8 +88,8 @@ export const HomePage = () => {
           </Stack>
         </Stack>
       ) : (
-        <PetCreationForm />
+        <PetCreationForm user={user} onSubmitPetForm={handleSubmitPetForm} />
       )}
-    </Panel>
+    </PanelCard>
   );
 };

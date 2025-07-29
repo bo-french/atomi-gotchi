@@ -1,16 +1,16 @@
 import { LoginForm } from "@/components/LoginForm";
-import { Panel } from "@/components/Panel";
-import { LoginMessage } from "@/types/login";
+import { PanelCard } from "@/components/PanelCard";
+import { RequestMessage } from "@/types/login";
 import { ROUTES } from "@/types/navigation";
 import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const LoginPage = () => {
-  const [message, setMessage] = useState<LoginMessage | undefined>(undefined);
+  const [message, setMessage] = useState<RequestMessage | undefined>(undefined);
 
   return (
-    <Panel message={message} showLogo>
+    <PanelCard message={message} showLogo>
       <LoginForm onSubmit={setMessage} />
       <Stack direction="row" alignItems="center">
         <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
@@ -20,6 +20,6 @@ export const LoginPage = () => {
           Sign up here
         </Button>
       </Stack>
-    </Panel>
+    </PanelCard>
   );
 };

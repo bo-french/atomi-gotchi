@@ -6,7 +6,7 @@ export const emailTemplates = {
   default: `
   <h1>🐾 Your Virtual Pet Says Hello!</h1>
   <p>Welcome to the Virtual Pet Email Game!</p>
-  <img src="${GIF_FOLDER}/pet.gif" alt="Virtual Pet" width="200" height="200">
+  <img src="${GIF_FOLDER}/happy.gif" alt="Virtual Pet" width="200" height="200">
   <br>
   `,
 };

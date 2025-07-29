@@ -1,4 +1,5 @@
-import { PetInfo } from "@/types/petInfo";
+import { Pet } from "@/components/Pet";
+import { PetInfo } from "@/types/pet";
 import { Box, Stack, Typography } from "@mui/material";
 
 interface Props {
@@ -11,8 +12,10 @@ export const PetInfoCard = (props: Props) => {
       <Typography variant="h1" sx={{ color: "primary.main" }}>
         {props.petInfo.name}
       </Typography>
-      <img src="/gifs/pet.gif" alt="Virtual Pet" />
-      <Typography variant="body1">{getMood(props.petInfo)}</Typography>
+      <Pet mood={props.petInfo.mood} />
+      <Typography variant="body1">
+        {getPetMoodDescription(props.petInfo)}
+      </Typography>
       <Stack flexDirection="row" gap={1}>
         <Typography variant="body1">❤️</Typography>
         {getStatusBar(props.petInfo.health)}
@@ -25,7 +28,8 @@ export const PetInfoCard = (props: Props) => {
   );
 };
 
-const getMood = (petInfo: PetInfo) => {
+// TODO: Change this subtitle based on pet.mood
+const getPetMoodDescription = (petInfo: PetInfo) => {
   return `${petInfo.name} seems happy!`;
 };
 

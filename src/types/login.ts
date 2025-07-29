@@ -1,4 +1,4 @@
-export type LoginMessage = {
+export type RequestMessage = {
   type: "success" | "error";
   text: string;
 };

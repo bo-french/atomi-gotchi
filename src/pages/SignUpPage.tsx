@@ -1,22 +1,22 @@
-import { Panel } from "@/components/Panel";
+import { PanelCard } from "@/components/PanelCard";
 import { SignUpForm } from "@/components/SignUpForm";
-import { LoginMessage } from "@/types/login";
+import { RequestMessage } from "@/types/login";
 import { ROUTES } from "@/types/navigation";
 import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export const SignUpPage = () => {
-  const [message, setMessage] = useState<LoginMessage | undefined>(undefined);
+  const [message, setMessage] = useState<RequestMessage | undefined>(undefined);
   const [hideSignUpForm, setHideSignUpForm] = useState(false);
 
-  const onSignUp = (message: LoginMessage) => {
+  const onSignUp = (message: RequestMessage) => {
     setMessage(message);
     setHideSignUpForm(message.type === "success");
   };
 
   return (
-    <Panel message={message} showLogo>
+    <PanelCard message={message} showLogo>
       {!hideSignUpForm && <SignUpForm onSubmit={onSignUp} />}
       <Stack direction="row" alignItems="center">
         <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
@@ -26,6 +26,6 @@ export const SignUpPage = () => {
           Login here
         </Button>
       </Stack>
-    </Panel>
+    </PanelCard>
   );
 };

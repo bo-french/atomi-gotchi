@@ -1,5 +1,9 @@
+import { BackToHome } from "@/components/BackToHome";
+import { Pet } from "@/components/Pet";
+import { RequestMessage } from "@/types/login";
+import { PetMood } from "@/types/pet";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { useMutation } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { api } from "../../convex/_generated/api";
@@ -8,10 +12,18 @@ interface PetCreationFormData {
   petName: string;
 }
 
-export const PetCreationForm = () => {
+interface Props {
+  user: any; // TODO: this should be typed
+  onSubmitPetForm: (message: RequestMessage) => void;
+}
+
+export const PetCreationForm = (props: Props) => {
   const [loading, setLoading] = useState(false);
+  const [petCreated, setPetCreated] = useState(false);
+  const [petMood, setPetMood] = useState(PetMood.HAPPY);
 
   const createPetMutation = useMutation(api.mutations.createPet.createPet);
+  const sendEmailAction = useAction(api.sendEmail.sendEmail);
 
   const { register, handleSubmit, watch, setValue } =
     useForm<PetCreationFormData>({
@@ -22,6 +34,33 @@ export const PetCreationForm = () => {
 
   const petName = watch("petName");
   const isFormValid = petName.trim() !== "";
+
+  const sendPetCreatedEmail = async () => {
+    if (!props.user?.email) {
+      return;
+    }
+
+    try {
+      const result = await sendEmailAction({ email: props.user?.email });
+
+      if (result?.success) {
+        props.onSubmitPetForm({
+          type: "success",
+          text: `Pet created successfully! We have sent an email to ${props.user?.email} with more information about your pet.`,
+        });
+
+        setPetCreated(true);
+        setPetMood(PetMood.EXCITED);
+      } else {
+        props.onSubmitPetForm({
+          type: "error",
+          text: "Failed to send email",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const onSubmitForm = async (data: PetCreationFormData) => {
     setLoading(true);
@@ -41,7 +80,12 @@ export const PetCreationForm = () => {
       });
 
       if (result?.success) {
-        window.location.reload();
+        await sendPetCreatedEmail();
+      } else {
+        props.onSubmitPetForm({
+          type: "error",
+          text: "Pet creation failed",
+        });
       }
     } catch (error) {
       console.error("Error creating pet:", error);
@@ -56,41 +100,58 @@ export const PetCreationForm = () => {
       style={{ width: "100%" }}
     >
       <Stack width="100%" alignItems="center" gap={2}>
-        <Typography variant="h1">Create Your Pet!</Typography>
-        <img src="/gifs/pet.gif" alt="Virtual Pet" />
-        <Stack flexDirection="row" gap={1} width="100%">
-          <Box flex={0.9}>
-            <TextField
-              label="Pet Name"
-              {...register("petName")}
-              fullWidth
-              slotProps={{
-                inputLabel: {
-                  shrink: petName.length > 0,
-                },
-              }}
-            />
-          </Box>
-          <Box
-            flex={0.1}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-          >
+        <Typography variant="h1" align="center">
+          {petCreated ? `${petName} says hello!` : "Create Your Pet!"}
+        </Typography>
+        <Pet mood={petMood} />
+        {!petCreated ? (
+          <>
+            <Stack flexDirection="row" gap={1} width="100%">
+              <Box flex={0.9}>
+                <TextField
+                  label="Pet Name"
+                  {...register("petName")}
+                  fullWidth
+                  slotProps={{
+                    inputLabel: {
+                      shrink: petName.length > 0,
+                    },
+                    input: {
+                      inputProps: {
+                        maxLength: 20,
+                      },
+                    },
+                  }}
+                />
+              </Box>
+              <Box
+                flex={0.1}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setValue("petName", randomPetName());
+                  }}
+                  sx={{ minWidth: "unset", typography: "h5" }}
+                >
+                  🎲
+                </Button>
+              </Box>
+            </Stack>
             <Button
-              variant="outlined"
-              onClick={() => {
-                setValue("petName", randomPetName());
-              }}
-              sx={{ minWidth: "unset", typography: "h5" }}
+              variant="contained"
+              disabled={!isFormValid || loading}
+              type="submit"
             >
-              🎲
+              {loading ? "Creating your pet..." : "Create"}
             </Button>
-          </Box>
-        </Stack>
-        <Button variant="contained" disabled={!isFormValid} type="submit">
-          {loading ? "Creating your pet..." : "Create"}
-        </Button>
+          </>
+        ) : (
+          <BackToHome onClick={() => window.location.reload()} />
+        )}
       </Stack>
     </form>
   );
@@ -136,6 +197,8 @@ const randomPetName = () => {
     "Sushi",
     "Gloop",
     "Crouton",
+    "Geoff",
+    "Bloo",
   ];
 
   return petNames[Math.floor(Math.random() * petNames.length)];

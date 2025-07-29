@@ -34,6 +34,7 @@ export const createPet = mutation({
         health: 100,
         hunger: 100,
         userId: user._id,
+        mood: "happy",
       });
 
       return {
