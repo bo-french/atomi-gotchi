@@ -5,7 +5,10 @@ import { AnimatedBackground } from "./components/AnimatedBackground";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
+import { CookingPage } from "./pages/games/CookingPage";
 import { SimonSaysPage } from "@/pages/games/SimonSaysPage";
+import { HigherLowerPage } from "@/pages/games/HigherOrLower";
+
 import { RockPaperScissors } from "@/pages/games/RockPaperScissors";
 
 // Simple auth state management
@@ -84,6 +87,23 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path={ROUTES.cooking}
+          element={
+            <ProtectedRoute>
+              <CookingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.higherLower}
+          element={
+            <ProtectedRoute>
+              <HigherLowerPage />
+            </ProtectedRoute>
+          }
+        />
+        
         <Route 
           path={ROUTES.rockPaperScissors}
           element={
