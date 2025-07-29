@@ -13,5 +13,6 @@ export default defineSchema({
     health: v.number(),
     hunger: v.number(),
     mood: v.string(),
+    lastEmail: v.string()
   }).index("by_userId", ["userId"]),
 });

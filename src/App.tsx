@@ -82,7 +82,7 @@ export default function App() {
           path={ROUTES.simonSays}
           element={
             <ProtectedRoute>
-              <CookingPage />
+              <SimonSaysPage />
             </ProtectedRoute>
           }
         />
