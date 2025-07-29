@@ -4,4 +4,5 @@ export const ROUTES = {
   signup: "/sign-up",
   simonSays: "/simon-says",
   cooking: "/cooking",
+  higherLower: "/higher-lower"
 };

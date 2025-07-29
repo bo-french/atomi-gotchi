@@ -7,6 +7,8 @@ import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
 import { CookingPage } from "./pages/games/CookingPage";
 import { SimonSaysPage } from "@/pages/games/SimonSaysPage";
+import { HigherLowerPage } from "@/pages/games/HigherOrLower";
+
 
 // Simple auth state management
 const useAuth = () => {
@@ -92,6 +94,15 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path={ROUTES.higherLower}
+          element={
+            <ProtectedRoute>
+              <HigherLowerPage />
+            </ProtectedRoute>
+          }
+        />
+        
         {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
