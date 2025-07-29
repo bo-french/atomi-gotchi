@@ -5,6 +5,7 @@ import { AnimatedBackground } from "./components/AnimatedBackground";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
+import { CookingPage } from "./pages/games/CookingPage";
 import { SimonSaysPage } from "@/pages/games/SimonSaysPage";
 import { HigherLowerPage } from "@/pages/games/HigherOrLower";
 
@@ -81,7 +82,15 @@ export default function App() {
           path={ROUTES.simonSays}
           element={
             <ProtectedRoute>
-              <SimonSaysPage />
+              <CookingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.cooking}
+          element={
+            <ProtectedRoute>
+              <CookingPage />
             </ProtectedRoute>
           }
         />
