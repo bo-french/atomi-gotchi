@@ -1,17 +1,172 @@
-import { useAction, useMutation } from "convex/react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { PetMood } from "@/types/pet";
 import { BackToHome } from "@/components/BackToHome";
 import { Pet } from "@/components/Pet";
+import { PetMood, ANIMATION_TIME } from "@/types/pet";
+import { Button, Paper, Stack, Typography, Box } from "@mui/material";
+
+
+const choices = [
+  { name: "rock", emoji: "🪨" },
+  { name: "paper", emoji: "📄" },
+  { name: "scissors", emoji: "✂️" },
+];
+
+
+
+const outcomes = ["", "", ""];
+var gameNo = 0;
+
+function getResult(player: string, opponent: string, gameNo: number) {
+  if (player === opponent) return "It's a tie!";
+  if (
+    (player === "rock" && opponent === "scissors") ||
+    (player === "paper" && opponent === "rock") ||
+    (player === "scissors" && opponent === "paper")
+  ) {
+    return outcomes[gameNo] = "Won";
+  }
+  return outcomes[gameNo] = "Lost";
+}
+
+function getResults(outcomes: string[]) {
+  const won = outcomes.filter(o => o === "Won").length;
+  const lost = outcomes.filter(o => o === "Lost").length;
+
+  if(won >= 2){
+    return "You won Rock Paper Scissors!"
+  }
+  if(lost >= 2){
+    return "You lost Rock Paper Scissors!"
+  }
+  else{
+    return "You tied Rock Paper Scissors!"
+  }
+}
+
+
 
 export const RockPaperScissors = () => {
-return(
-    <div>
+  const [gameStarted, setGameStarted] = useState(false);
+  const [playerChoice, setPlayerChoice] = useState<string | null>(null);
+  const [opponentChoice, setOpponentChoice] = useState<string | null>(null);
+  const [result, setResult] = useState<string | null>(null);
+  const [petMood, setPetMood] = useState<PetMood>(PetMood.HAPPY);
+
+  const handlePlay = () => {
+    setPlayerChoice(null);
+    setOpponentChoice(null);
+    setResult(null);
+    setGameStarted(true);
+    gameNo = 0;
+    outcomes[0] = outcomes[1] = outcomes[2] = "";
+  //  setPetMood(PetMood.HAPPY);
+  };
+
+  const handleChoice = (choice: string) => {
+    const opponent = choices[Math.floor(Math.random() * choices.length)].name;
+    setPlayerChoice(choice);
+    setOpponentChoice(opponent);
+    const res = getResult(choice, opponent, gameNo);
+
+    let mood: PetMood;
+    if (res === "Won") {
+      mood = PetMood.HAPPY;
+    } else if (res === "It's a tie!") {
+      mood = PetMood.NEUTRAL;
+    } else {
+      mood = PetMood.SAD;
+    }
+    setPetMood(mood);
+    setResult(res);
+    gameNo++;
+    
+    if(outcomes[2] != ""){
+        const result = getResults(outcomes);
+        let endMood: PetMood;
+        if(result.includes("won")){
+            endMood = PetMood.EXCITED;
+        }
+        if(result.includes("lost")){
+            endMood = PetMood.SAD;
+        }
+        else{
+            endMood = PetMood.NEUTRAL;
+        }
+        setPetMood(endMood);
+    }
+  };
+
+  const handleClose = () => {
+    setGameStarted(false);
+    setPlayerChoice(null);
+    setOpponentChoice(null);
+    setResult(null);
+    gameNo = 0;
+    outcomes[0] = outcomes[1] = outcomes[2] = "";
+    setPetMood(PetMood.HAPPY);
+  };
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+        <Pet mood={petMood} />
+      </Box>
       <h1>Rock Paper Scissors</h1>
-      <Pet mood={PetMood.HAPPY} />
-      <BackToHome />
+      {!gameStarted && (
+        <>
+          <Button variant="contained" onClick={handlePlay} sx={{ mt: 2, mb: 2 }}>
+            Play Game
+          </Button>
+          <BackToHome />
+        </>
+      )}
+      {gameStarted && (
+        <Paper elevation={4} sx={{ maxWidth: 400, mx: "auto", mt: 3, p: 3, borderRadius: 3 }}>
+          {gameNo < 3 ? (
+            <>
+              <Typography variant="h6" sx={{ mb: 2 }}>Choose your move:</Typography>
+              <Stack direction="row" spacing={2} justifyContent="center">
+                {choices.map((c) => (
+                  <Box
+                    key={c.name}
+                    onClick={() => handleChoice(c.name)}
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: "16px",
+                      background: "#f0f0f0",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 36,
+                      cursor: "pointer",
+                      boxShadow: 2,
+                      transition: "background 0.2s",
+                      '&:hover': { background: '#e0e0e0' },
+                    }}
+                  >
+                    {c.emoji}
+                  </Box>
+                ))}
+              </Stack>
+              {playerChoice && opponentChoice && (
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  You chose: {choices.find(c => c.name === playerChoice)?.emoji} <br />
+                  Your pet chose: {choices.find(c => c.name === opponentChoice)?.emoji}
+                  <br />
+                  {result && <Typography variant="h5" sx={{ mt: 2, mb: 2 }}>{result} Game number {gameNo} / 3</Typography>}
+                  <Button variant="contained" onClick={handleClose}>Close</Button>
+                </Typography>
+              )}
+            </>
+          ) : (
+            <>
+              <Typography variant="h6" sx={{ mt: 2 }}>Game over! {getResults(outcomes)} </Typography>
+              <Button variant="contained" onClick={handleClose} sx={{ mt: 2 }}>Close</Button>
+            </>
+          )}
+        </Paper>
+      )}
     </div>
   );
-
 }
