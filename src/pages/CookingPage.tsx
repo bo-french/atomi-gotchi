@@ -29,7 +29,7 @@ const combinations: Record<string, Treat> = {
   "🍍🍌": { emoji: "🍹", name: "Tropical Candy" },
 };
 
-export default function CookingPage() {
+export function CookingPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [result, setResult] = useState<Treat | null>(null);
   const navigate = useNavigate();

@@ -5,7 +5,8 @@ import { AnimatedBackground } from "./components/AnimatedBackground";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignUpPage } from "./pages/SignUpPage";
-import CookingPage from "./pages/CookingPage";
+import { CookingPage } from "./pages/CookingPage";
+import { SimonSaysPage } from "@/pages/games/SimonSaysPage";
 
 // Simple auth state management
 const useAuth = () => {
@@ -72,6 +73,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.simonSays}
+          element={
+            <ProtectedRoute>
+              <CookingPage />
             </ProtectedRoute>
           }
         />
