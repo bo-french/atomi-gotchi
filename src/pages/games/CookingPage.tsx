@@ -31,18 +31,18 @@ const fruits: Fruit[] = [
 ];
 
 const combinations: Record<string, Treat> = {
-  "applecoconut": { key: "applecoconut", name: "Tropical Apple Candy", img: "/food/brownorange.png" },
+  "applecoconut": { key: "applecoconut", name: "Crabby Candy", img: "/food/brownorange.png" },
   "appleorange": { key: "appleorange", name: "Opposites Candy", img: "/food/redorange.png" },
   "applegrapes": { key: "applegrapes", name: "Grapple Candy", img: "/food/redpurple.png" },
   "applecherry": { key: "applecherry", name: "Chapped Candy", img: "/food/redbrown.png" },
   "applepineapple": { key: "applepineapple", name: "Apple Overload Candy", img: "/food/redyellow.png" },
-  "coconutorange": { key: "coconutorange", name: "Coconut Citrus Candy", img: "/food/brownorange.png" },
+  "coconutorange": { key: "coconutorange", name: "Tiger Candy", img: "/food/brownorange.png" },
   "coconutgrapes": { key: "coconutgrapes", name: "Coconut Grape Candy", img: "/food/purplebrown.png" },
-  "coconutcherry": { key: "coconutcherry", name: "Coconut Cherry Candy", img: "/food/redbrown.png" },
+  "coconutcherry": { key: "coconutcherry", name: "Crunch Candy", img: "/food/redbrown.png" },
   "coconutpineapple": { key: "coconutpineapple", name: "Tropical Candy", img: "/food/brownyellow.png" },
   "grapesorange": { key: "orangegrapes", name: "Orange Grape Candy", img: "/food/purpleorange.png" },
   "cherryorange": { key: "orangecherry", name: "Sunset Candy", img: "/food/redorange.png" },
-  "orangepineapple": { key: "orangepineapple", name: "Citrus Pineapple Candy", img: "/food/redyellow.png" },
+  "orangepineapple": { key: "orangepineapple", name: "Golden Candy", img: "/food/redyellow.png" },
   "cherrygrapes": { key: "grapescherry", name: "Berry Grape Candy", img: "/food/redpurple.png" },
   "grapespineapple": { key: "grapespineapple", name: "Complementary Candy", img: "/food/purpleyellow.png" },
   "cherrypineapple": { key: "cherrypineapple", name: "Cherry Pineapple Candy", img: "/food/redyellow.png" },
