@@ -9,6 +9,7 @@ import { CookingPage } from "./pages/games/CookingPage";
 import { SimonSaysPage } from "@/pages/games/SimonSaysPage";
 import { HigherLowerPage } from "@/pages/games/HigherOrLower";
 
+import { RockPaperScissors } from "@/pages/games/RockPaperScissors";
 
 // Simple auth state management
 const useAuth = () => {
@@ -103,6 +104,14 @@ export default function App() {
           }
         />
         
+        <Route 
+          path={ROUTES.rockPaperScissors}
+          element={
+            <ProtectedRoute>
+              <RockPaperScissors />
+            </ProtectedRoute>
+          }
+        />
         {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
