@@ -42,10 +42,13 @@ export const HomePage = () => {
         return;
       }
 
-      setPet({
+      const petWithMood = {
         ...result.pet,
         mood: mapPetMood(result.pet.mood),
-      });
+      };
+      setPet(petWithMood);
+      // Always set currentPet in localStorage for use in other pages
+      localStorage.setItem("currentPet", JSON.stringify(petWithMood));
 
       setIsLoadingPet(false);
     };
