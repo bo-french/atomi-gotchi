@@ -6,12 +6,10 @@ import { Button, Paper, Stack, Typography, Box } from "@mui/material";
 
 
 const choices = [
-  { name: "rock", emoji: "🪨" },
-  { name: "paper", emoji: "📄" },
-  { name: "scissors", emoji: "✂️" },
+  { name: "rock", img: "/rps/rock1.png" },
+  { name: "paper", img: "/rps/paper.png" },
+  { name: "scissors", img: "/rps/scissors1.png" },
 ];
-
-
 
 const outcomes = ["", "", ""];
 var gameNo = 0;
@@ -43,8 +41,6 @@ function getResults(outcomes: string[]) {
   }
 }
 
-
-
 export const RockPaperScissors = () => {
   const [gameStarted, setGameStarted] = useState(false);
   const [playerChoice, setPlayerChoice] = useState<string | null>(null);
@@ -59,7 +55,7 @@ export const RockPaperScissors = () => {
     setGameStarted(true);
     gameNo = 0;
     outcomes[0] = outcomes[1] = outcomes[2] = "";
-  //  setPetMood(PetMood.HAPPY);
+
   };
 
   const handleChoice = (choice: string) => {
@@ -145,14 +141,20 @@ export const RockPaperScissors = () => {
                       '&:hover': { background: '#e0e0e0' },
                     }}
                   >
-                    {c.emoji}
+                    <img src={c.img} alt={c.name} style={{ width: 40, height: 40 }} />
                   </Box>
                 ))}
               </Stack>
               {playerChoice && opponentChoice && (
-                <Typography variant="h6" sx={{ mt: 2 }}>
-                  You chose: {choices.find(c => c.name === playerChoice)?.emoji} <br />
-                  Your pet chose: {choices.find(c => c.name === opponentChoice)?.emoji}
+                <Typography variant="h6" sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    You chose:
+                    <img src={choices.find(c => c.name === playerChoice)?.img} alt={playerChoice || ''} style={{ width: 40, height: 40 }} />
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    Your pet chose:
+                    <img src={choices.find(c => c.name === opponentChoice)?.img} alt={opponentChoice || ''} style={{ width: 40, height: 40 }} />
+                  </span>
                   <br />
                   {result && <Typography variant="h5" sx={{ mt: 2, mb: 2 }}>{result} Game number {gameNo} / 3</Typography>}
                   <Button variant="contained" onClick={handleClose}>Close</Button>
