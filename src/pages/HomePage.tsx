@@ -5,7 +5,7 @@ import { RequestMessage } from "@/types/login";
 import { mapPetMood, PetInfo } from "@/types/pet";
 import { Button, CircularProgress, Stack } from "@mui/material";
 import { useMutation } from "convex/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
 
@@ -21,6 +21,40 @@ export const HomePage = () => {
 
   const getPetMutation = useMutation(api.mutations.getPet.getPet);
 
+const deriveMoodFromHealth = (health: number) => {
+  if (health < 33) return "sad";
+  if (health < 66) return "neutral";
+  return "happy";
+};
+
+const loadPet = useCallback(async () => {
+  console.log("Loading pet information... (HomePage)");
+  if (!user?.email) return;
+
+  setIsLoadingPet(true);
+  const result = await getPetMutation({ email: user.email });
+  console.log("getPet response on HomePage:", result);
+  if (!result?.pet) {
+    setIsLoadingPet(false);
+    return;
+  }
+
+  // Derive mood from health for consistency
+  const derivedMood = deriveMoodFromHealth(result.pet.health);
+  const petWithMood = {
+    ...result.pet,
+    mood: mapPetMood(derivedMood), // or just use derivedMood if PetInfoCard accepts that
+  };
+
+  setPet(petWithMood);
+  if (petWithMood.health === 0) {
+    setPet(undefined);
+    setMessage({ type: "info", text: "Your pet has died. Create a new one to continue." });
+}
+  localStorage.setItem("currentPet", JSON.stringify(petWithMood));
+  setIsLoadingPet(false);
+}, [user, getPetMutation]);
+
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
     if (currentUser) {
@@ -29,32 +63,31 @@ export const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    const getPet = async () => {
-      if (!user?.email) return;
+    void loadPet();
+  }, [loadPet]);
 
-      setIsLoadingPet(true);
-      const result = await getPetMutation({
-        email: user.email,
-      });
-
-      if (!result?.pet) {
-        setIsLoadingPet(false);
-        return;
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void loadPet();
       }
+    };
+    window.addEventListener("visibilitychange", onVisibility);
+    return () => window.removeEventListener("visibilitychange", onVisibility);
+  }, [loadPet]);
 
-      const petWithMood = {
-        ...result.pet,
-        mood: mapPetMood(result.pet.mood),
-      };
-      setPet(petWithMood);
-      // Always set currentPet in localStorage for use in other pages
-      localStorage.setItem("currentPet", JSON.stringify(petWithMood));
-
-      setIsLoadingPet(false);
+  useEffect(() => {
+    const handlePetUpdated = () => {
+      console.log("Received 'pet-updated' event, reloading pet...");
+      void loadPet();
     };
 
-    void getPet();
-  }, [user, getPetMutation]);
+    window.addEventListener("pet-updated", handlePetUpdated);
+
+    return () => {
+      window.removeEventListener("pet-updated", handlePetUpdated);
+    };
+  }, [loadPet]);
 
   const handleSignOut = () => {
     localStorage.removeItem("currentUser");
