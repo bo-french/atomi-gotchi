@@ -28,13 +28,31 @@ export const PetInfoCard = (props: Props) => {
   );
 };
 
-// TODO: Change this subtitle based on pet.mood
+// Mood description based only on health
 const getPetMoodDescription = (petInfo: PetInfo) => {
-  return `${petInfo.name} seems happy!`;
+  if (petInfo.health === 0) {
+    return `${petInfo.name} is dead.`;
+  }
+
+  const healthWeight = 0.7;
+  const hungerWeight = 0.3;
+
+  const composite =
+    (petInfo.health * healthWeight + petInfo.hunger * hungerWeight) /
+    (healthWeight + hungerWeight);
+
+  if (composite < 33) {
+    return `${petInfo.name} seems sad.`;
+  }
+  // optionally add a “happy” tier if composite is high
+  if (composite >= 80) {
+    return `${petInfo.name} seems happy.`;
+  }
+  return `${petInfo.name} seems okay.`;
 };
 
 const getHealthBar = (health: number) => {
-  const percentage = Math.max(0, Math.min(100, (health / 10) * 100));
+  const percentage = Math.max(0, Math.min(100, health));
   let color = "#4caf50";
   if (percentage <= 30) color = "#f44336";
   else if (percentage <= 60) color = "#ff9800";
