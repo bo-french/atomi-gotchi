@@ -13,6 +13,7 @@ export const getPet = mutation({
         health: v.number(),
         hunger: v.number(),
         mood: v.string(),
+        nextEmailAt: v.optional(v.string())
       })
     ),
     success: v.boolean(),
@@ -45,6 +46,7 @@ export const getPet = mutation({
               health: existingPet.health,
               hunger: existingPet.hunger,
               mood: existingPet.mood,
+              nextEmailAt: existingPet.nextEmailAt
             }
           : undefined,
         success: existingPet !== null,

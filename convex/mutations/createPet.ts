@@ -36,6 +36,7 @@ export const createPet = mutation({
         userId: user._id,
         mood: "happy",
         lastInteractionAt: new Date().toISOString(),
+        nextEmailAt: new Date().toISOString(),
         lastEmail: new Date().toISOString()
 
       });
