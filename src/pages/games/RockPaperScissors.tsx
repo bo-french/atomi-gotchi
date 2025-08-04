@@ -104,18 +104,20 @@ export const RockPaperScissors = () => {
     setRound((prev) => prev + 1);
   };
 
+ 
   const handleFinalResults = async (results: string[]) => {
     const won = results.filter((r) => r === "Won").length;
     const lost = results.filter((r) => r === "Lost").length;
+    const tied = results.filter((r) => r === "It's a tie!").length;
     let delta = 0;
     let message = "You tied Rock Paper Scissors!";
-    //update health and mood per final result
-    if (won >= 2) {
-      delta = 25;
+    // update health and mood per final result
+    if (won >= 2 || (won === 1 && tied === 2)) {
+      delta = 5;
       message = "You won Rock Paper Scissors!";
       setPetMood(PetMood.EXCITED);
-    } else if (lost >= 2) {
-      delta = -25;
+    } else if (lost >= 2 || (lost === 1 && tied === 2)) {
+      delta = -5;
       message = "You lost Rock Paper Scissors!";
       setPetMood(PetMood.SAD);
     } else {
