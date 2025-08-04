@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { BackToHome } from "@/components/BackToHome";
 import { Panel } from "@/components/Panel";
 import { Button, Stack, Typography, Box } from "@mui/material";
@@ -140,7 +141,7 @@ export function CookingPage() {
       if (score < 0) {
         setPetMoodWithTimeout(PetMood.SAD);
       } else if (score > 0) {
-        setPetMoodWithTimeout(PetMood.HAPPY);
+        setPetMoodWithTimeout(PetMood.EXCITED);
       } else {
         setPetMoodWithTimeout(PetMood.NEUTRAL);
       }
@@ -163,148 +164,152 @@ export function CookingPage() {
     };
   }, [moodTimeout]);
 
+  const animatedBg = typeof window !== "undefined" ? localStorage.getItem("animatedBg") !== "false" : true;
+
   return (
-    <Panel
-      sx={{
-        width: 600,
-        minHeight: 500,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 2,
-        background: "white",
-        boxShadow: 3,
-        position: "relative",
-      }}
-    >
-      {/* Pet display row, only after game has started */}
-      {started && (
-        <Stack direction="row" alignItems="center" sx={{ width: "100%", position: "relative", mt: 2, mb: 1 }}>
-          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <Pet mood={petMood} />
-            {/* Hunger bar below pet */}
-            <Box sx={{ mt: 1, width: 250 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography variant="body1">🍪</Typography>
-                <Box sx={{ flex: 1 }}>
-                  <Box sx={{
-                    width: '100%',
-                    height: 20,
-                    backgroundColor: '#e0e0e0',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    border: '2px solid #ccc',
-                  }}>
+    <AnimatedBackground animated={animatedBg}>
+      <Panel
+        sx={{
+          width: 600,
+          minHeight: 500,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+          background: "white",
+          boxShadow: 3,
+          position: "relative",
+        }}
+      >
+        {/* Pet display row, only after game has started */}
+        {started && (
+          <Stack direction="row" alignItems="center" sx={{ width: "100%", position: "relative", mt: 2, mb: 1 }}>
+            <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <Pet mood={petMood} />
+              {/* Hunger bar below pet */}
+              <Box sx={{ mt: 1, width: 250 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="body1">🍪</Typography>
+                  <Box sx={{ flex: 1 }}>
                     <Box sx={{
-                      width: `${hungerBar}%`,
-                      height: '100%',
-                      backgroundColor: hungerBar <= 30 ? '#f44336' : hungerBar <= 60 ? '#ff9800' : '#4caf50',
-                      transition: 'all 0.3s ease',
-                      borderRadius: 1,
-                    }} />
+                      width: '100%',
+                      height: 20,
+                      backgroundColor: '#e0e0e0',
+                      borderRadius: 2,
+                      overflow: 'hidden',
+                      border: '2px solid #ccc',
+                    }}>
+                      <Box sx={{
+                        width: `${hungerBar}%`,
+                        height: '100%',
+                        backgroundColor: hungerBar <= 30 ? '#f44336' : hungerBar <= 60 ? '#ff9800' : '#4caf50',
+                        transition: 'all 0.3s ease',
+                        borderRadius: 1,
+                      }} />
+                    </Box>
                   </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
-        </Stack>
-      )}
-      {showConfetti && <Confetti width={600} height={500} recycle={false} numberOfPieces={400} gravity={0.2} />}
-      {!started ? (
-        <Stack alignItems="center" justifyContent="center" height="100%" width="100%" gap={2}>
-          <Typography variant="h4" fontWeight={700} color="#1976d2" mt={2} mb={1}>
-            Cooking Minigame
-          </Typography>
-          <Typography fontSize={18} color="#1976d2" mb={1}>
-            Select two fruits to combine into a treat!
-          </Typography>
-          <Typography fontSize={16} color="#1976d2" mb={2}>Try to figure out your pet's favorite</Typography>
-          <Button variant="contained" onClick={handleStart} sx={{ background: "#1976d2", color: "#fff", fontWeight: 700, boxShadow: 3, mt: 2 }}>
-            Start Game
-          </Button>
-        </Stack>
-      ) : (
-        <>
-          {started && (
-            <>
-              {fruitsVisible && (
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: 2,
-                    width: 350,
-                    minHeight: 160,
-                    position: "relative",
-                    mb: 2,
-                  }}
-                >
-                  {fruits.map((fruit) => (
-                    <Box
-                      key={fruit.key}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        cursor: selected.includes(fruit.key) ? "not-allowed" : "pointer",
-                        opacity: selected.includes(fruit.key) ? 0.5 : 1,
-                        transition: "all 0.2s ease",
-                        borderRadius: 2,
-                        border: selected.includes(fruit.key) ? '2px solid #1976d2' : '2px solid transparent',
-                        boxShadow: selected.includes(fruit.key) ? '0 0 8px #1976d2' : undefined,
-                        background: '#f5faff',
-                        p: 1,
-                        m: 1,
-                        '&:hover': {
-                          background: '#e3f2fd',
-                          transform: selected.includes(fruit.key) ? undefined : 'scale(1.05)',
-                        },
-                      }}
-                      onClick={() => handleSelect(fruit)}
-                    >
-                      <img src={fruit.img} alt={fruit.name} style={{ width: 48, height: 48, borderRadius: 8 }} />
-                      <Typography fontSize={14} textAlign="center" color="#1976d2">{fruit.name}</Typography>
-                    </Box>
-                  ))}
-                </Box>
-              )}
-              <Typography fontSize={16} color="#1976d2" mb={2}>
-                Selected: {selected.map(key => fruits.find(f => f.key === key)?.name).join(" ")}
-              </Typography>
-              {selected.length === 2 && !result && fruitsVisible && (
-                <Button variant="contained" onClick={handleCombine} sx={{ background: "#1976d2", color: "#fff", fontWeight: 700, boxShadow: 3, mb: 2 }}>
-                  Combine
-                </Button>
-              )}
-              {result && !fruitsVisible && (
-                <Box
-                  sx={{
-                    mt: 2,
-                    mb: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    background: '#f5faff',
-                    borderRadius: 3,
-                    boxShadow: 2,
-                    p: 2,
-                    zIndex: 2,
-                  }}
-                >
-                  <img src={result.img} alt={result.name} style={{ width: 64, height: 64, borderRadius: 12, boxShadow: '0 0 12px #1976d2', background: '#f5faff' }} />
-                  <Typography variant="h6" color="#1976d2" mt={1}>{result.name}</Typography>
-                  <Button variant="outlined" onClick={handleFeedPet} sx={{ border: "2px solid #1976d2", color: "#1976d2", fontWeight: 700, background: "#fff", mt: 1 }}>
-                    Feed Your Pet
+          </Stack>
+        )}
+        {showConfetti && <Confetti width={600} height={500} recycle={false} numberOfPieces={400} gravity={0.2} />}
+        {!started ? (
+          <Stack alignItems="center" justifyContent="center" height="100%" width="100%" gap={2}>
+            <Typography variant="h4" fontWeight={700} color="#1976d2" mt={2} mb={1}>
+              Cooking Minigame
+            </Typography>
+            <Typography fontSize={18} color="#1976d2" mb={1}>
+              Select two fruits to combine into a treat!
+            </Typography>
+            <Typography fontSize={16} color="#1976d2" mb={2}>Try to figure out your pet's favorite</Typography>
+            <Button variant="contained" onClick={handleStart} sx={{ background: "#1976d2", color: "#fff", fontWeight: 700, boxShadow: 3, mt: 2 }}>
+              Start Game
+            </Button>
+          </Stack>
+        ) : (
+          <>
+            {started && (
+              <>
+                {fruitsVisible && (
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)",
+                      gap: 2,
+                      width: 350,
+                      minHeight: 160,
+                      position: "relative",
+                      mb: 2,
+                    }}
+                  >
+                    {fruits.map((fruit) => (
+                      <Box
+                        key={fruit.key}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          cursor: selected.includes(fruit.key) ? "not-allowed" : "pointer",
+                          opacity: selected.includes(fruit.key) ? 0.5 : 1,
+                          transition: "all 0.2s ease",
+                          borderRadius: 2,
+                          border: selected.includes(fruit.key) ? '2px solid #1976d2' : '2px solid transparent',
+                          boxShadow: selected.includes(fruit.key) ? '0 0 8px #1976d2' : undefined,
+                          background: '#f5faff',
+                          p: 1,
+                          m: 1,
+                          '&:hover': {
+                            background: '#e3f2fd',
+                            transform: selected.includes(fruit.key) ? undefined : 'scale(1.05)',
+                          },
+                        }}
+                        onClick={() => handleSelect(fruit)}
+                      >
+                        <img src={fruit.img} alt={fruit.name} style={{ width: 48, height: 48, borderRadius: 8 }} />
+                        <Typography fontSize={14} textAlign="center" color="#1976d2">{fruit.name}</Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+                <Typography fontSize={16} color="#1976d2" mb={2}>
+                  Selected: {selected.map(key => fruits.find(f => f.key === key)?.name).join(" ")}
+                </Typography>
+                {selected.length === 2 && !result && fruitsVisible && (
+                  <Button variant="contained" onClick={handleCombine} sx={{ background: "#1976d2", color: "#fff", fontWeight: 700, boxShadow: 3, mb: 2 }}>
+                    Combine
                   </Button>
-                </Box>
-              )}
-            </>
-          )}
-          <Box mt={2}>
-            <BackToHome />
-          </Box>
-        </>
-      )}
-    </Panel>
+                )}
+                {result && !fruitsVisible && (
+                  <Box
+                    sx={{
+                      mt: 2,
+                      mb: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      background: '#f5faff',
+                      borderRadius: 3,
+                      boxShadow: 2,
+                      p: 2,
+                      zIndex: 2,
+                    }}
+                  >
+                    <img src={result.img} alt={result.name} style={{ width: 64, height: 64, borderRadius: 12, boxShadow: '0 0 12px #1976d2', background: '#f5faff' }} />
+                    <Typography variant="h6" color="#1976d2" mt={1}>{result.name}</Typography>
+                    <Button variant="outlined" onClick={handleFeedPet} sx={{ border: "2px solid #1976d2", color: "#1976d2", fontWeight: 700, background: "#fff", mt: 1 }}>
+                      Feed Your Pet
+                    </Button>
+                  </Box>
+                )}
+              </>
+            )}
+            <Box mt={2}>
+              <BackToHome />
+            </Box>
+          </>
+        )}
+      </Panel>
+    </AnimatedBackground>
   );
 }
