@@ -5,6 +5,8 @@ import { PetMood, ANIMATION_TIME } from "@/types/pet";
 import { Box, Stack, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const squares = [
   { id: 1, color: "#ff4444", activeColor: "#ff8888" }, // Red
@@ -33,6 +35,9 @@ export const SimonSaysPage = () => {
   const [petMood, setPetMood] = useState<PetMood>(PetMood.HAPPY);
   const [health, setHealth] = useState<number>(MAX_HEALTH);
   const [showDeadModal, setShowDeadModal] = useState(false);
+  const [pet, setPet] = useState<any | null>(null);
+  const getPet = useMutation(api.mutations.getPet.getPet);
+  const updateHealth = useMutation(api.mutations.updateHealth.updateHealth);
 
   const navigate = useNavigate();
 
@@ -73,6 +78,26 @@ export const SimonSaysPage = () => {
       }, index * 1000);
     });
   };
+  useEffect(() => {
+  const loadPet = async () => {
+    const currentUserRaw = localStorage.getItem("currentUser");
+    if (!currentUserRaw) return;
+    try {
+      const user = JSON.parse(currentUserRaw);
+      if (!user?.email) return;
+      const res = await getPet({ email: user.email });
+      if (res.success && res.pet) {
+        setPet(res.pet);
+        setHealth(res.pet.health ?? MAX_HEALTH);
+        setPetMood(deriveMoodFromHealth(res.pet.health ?? MAX_HEALTH));
+        localStorage.setItem("currentPet", JSON.stringify(res.pet));
+      }
+    } catch {
+      // ignore parse errors
+    }
+  };
+  void loadPet();
+}, [getPet]);
 
   useEffect(() => {
     addRandomSquareToSequence();
@@ -96,8 +121,8 @@ export const SimonSaysPage = () => {
     const correctSquare = sequence[currentIndex];
 
 if (squareId === correctSquare) {
-  // heal a bit for correct input
-  setHealth((prev) => Math.min(MAX_HEALTH, prev + 5));
+  // heal locally first for snappiness
+  setHealth((prev) => Math.min(MAX_HEALTH, prev + HEAL_ON_CORRECT));
   const newIndex = currentIndex + 1;
   setCurrentIndex(newIndex);
 
@@ -106,12 +131,25 @@ if (squareId === correctSquare) {
 
     if (sequence.length !== NUM_ROUNDS) {
       setTimeout(() => {
-        setPetMood(deriveMoodFromHealth(Math.min(MAX_HEALTH, health + 5)));
+        setPetMood(deriveMoodFromHealth(Math.min(MAX_HEALTH, health + HEAL_ON_CORRECT)));
         setCurrentIndex(0);
         addRandomSquareToSequence();
       }, ANIMATION_TIME * 2);
     } else {
-      // win: reset health to max
+      // win: restore to max on backend too
+      if (pet) {
+        const deltaToMax = MAX_HEALTH - health;
+        if (deltaToMax > 0) {
+          void updateHealth({ petId: pet.id, delta: deltaToMax }).then((result) => {
+            if (result.success) {
+              const updatedPet = { ...pet, health: result.health };
+              setPet(updatedPet);
+              localStorage.setItem("currentPet", JSON.stringify(updatedPet));
+              setPetMood(deriveMoodFromHealth(result.health));
+            }
+          });
+        }
+      }
       setHealth(MAX_HEALTH);
       setTimeout(() => {
         setPetMood(deriveMoodFromHealth(MAX_HEALTH));
@@ -120,17 +158,40 @@ if (squareId === correctSquare) {
       setCanClickSquares(false);
     }
   }
-} else {
-      // wrong: penalize health
-      setHealth((prev) => Math.max(0, prev - WRONG_PENALTY));
-      setPetMood(PetMood.SAD);
 
-      setTimeout(() => {
-        setPetMood(deriveMoodFromHealth(Math.max(0, health - WRONG_PENALTY)));
-        setCurrentIndex(0);
-        repeatSequence();
-      }, ANIMATION_TIME * 2);
-    }
+  // persist the heal to backend for non-final correct (optional: batch or debounce if too chatty)
+  if (newIndex !== sequence.length && pet) {
+    void updateHealth({ petId: pet.id, delta: HEAL_ON_CORRECT }).then((result) => {
+      if (result.success) {
+        const updatedPet = { ...pet, health: result.health };
+        setPet(updatedPet);
+        localStorage.setItem("currentPet", JSON.stringify(updatedPet));
+        // mood will sync via effect on health
+      }
+    });
+  }
+} else {
+  // wrong: penalize
+  setHealth((prev) => Math.max(0, prev - WRONG_PENALTY));
+  setPetMood(PetMood.SAD);
+
+  if (pet) {
+    void updateHealth({ petId: pet.id, delta: -WRONG_PENALTY }).then((result) => {
+      if (result.success) {
+        const updatedPet = { ...pet, health: result.health };
+        setPet(updatedPet);
+        localStorage.setItem("currentPet", JSON.stringify(updatedPet));
+        if (result.health <= 0) setShowDeadModal(true);
+      }
+    });
+  }
+
+  setTimeout(() => {
+    setPetMood(deriveMoodFromHealth(Math.max(0, health - WRONG_PENALTY)));
+    setCurrentIndex(0);
+    repeatSequence();
+  }, ANIMATION_TIME * 2);
+}
   };
 
   let healthColor = "#4caf50";
