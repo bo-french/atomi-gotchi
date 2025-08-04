@@ -8,6 +8,8 @@ import { useMutation } from "convex/react";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../convex/_generated/api";
+import { SettingsMenu } from "@/components/SettingsMenu";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 
 export const HomePage = () => {
   const [user, setUser] = useState<any>(null);
@@ -17,43 +19,53 @@ export const HomePage = () => {
 
   const [message, setMessage] = useState<RequestMessage | undefined>(undefined);
 
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [emailEnabled, setEmailEnabled] = useState(() => {
+    const val = localStorage.getItem("emailEnabled");
+    return val === null ? true : val === "true";
+  });
+  const [animatedBg, setAnimatedBg] = useState(() => {
+    const val = localStorage.getItem("animatedBg");
+    return val === null ? true : val === "true";
+  });
+
   const navigate = useNavigate();
 
   const getPetMutation = useMutation(api.mutations.getPet.getPet);
 
-const deriveMoodFromHealth = (health: number) => {
-  if (health < 33) return "sad";
-  if (health < 66) return "neutral";
-  return "happy";
-};
-
-const loadPet = useCallback(async () => {
-  console.log("Loading pet information... (HomePage)");
-  if (!user?.email) return;
-
-  setIsLoadingPet(true);
-  const result = await getPetMutation({ email: user.email });
-  console.log("getPet response on HomePage:", result);
-  if (!result?.pet) {
-    setIsLoadingPet(false);
-    return;
-  }
-
-  // Derive mood from health for consistency
-  const derivedMood = deriveMoodFromHealth(result.pet.health);
-  const petWithMood = {
-    ...result.pet,
-    mood: mapPetMood(derivedMood), // or just use derivedMood if PetInfoCard accepts that
+  const deriveMoodFromHealth = (health: number) => {
+    if (health < 33) return "sad";
+    if (health < 66) return "neutral";
+    return "happy";
   };
 
-  setPet(petWithMood);
-  if (petWithMood.health === 0) {
-    setPet(undefined);
-    setMessage({ type: "info", text: "Your pet has died. Create a new one to continue." });
-}
-  localStorage.setItem("currentPet", JSON.stringify(petWithMood));
-  setIsLoadingPet(false);
-}, [user, getPetMutation]);
+  const loadPet = useCallback(async () => {
+    console.log("Loading pet information... (HomePage)");
+    if (!user?.email) return;
+
+    setIsLoadingPet(true);
+    const result = await getPetMutation({ email: user.email });
+    console.log("getPet response on HomePage:", result);
+    if (!result?.pet) {
+      setIsLoadingPet(false);
+      return;
+    }
+
+    // Derive mood from health for consistency
+    const derivedMood = deriveMoodFromHealth(result.pet.health);
+    const petWithMood = {
+      ...result.pet,
+      mood: mapPetMood(derivedMood), // or just use derivedMood if PetInfoCard accepts that
+    };
+
+    setPet(petWithMood);
+    if (petWithMood.health === 0) {
+      setPet(undefined);
+      setMessage({ type: "info", text: "Your pet has died. Create a new one to continue." });
+    }
+    localStorage.setItem("currentPet", JSON.stringify(petWithMood));
+    setIsLoadingPet(false);
+  }, [user, getPetMutation]);
 
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser");
@@ -94,38 +106,64 @@ const loadPet = useCallback(async () => {
     void navigate("/login");
   };
 
-  const handleSettings = () => {};
+  const handleSettings = () => {
+    setSettingsOpen(true);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsOpen(false);
+  };
+
+  const handleEmailToggle = (enabled: boolean) => {
+    setEmailEnabled(enabled);
+    localStorage.setItem("emailEnabled", String(enabled));
+  };
+
+  const handleBgToggle = (enabled: boolean) => {
+    setAnimatedBg(enabled);
+    localStorage.setItem("animatedBg", String(enabled));
+  };
 
   const handleSubmitPetForm = (message: RequestMessage) => {
     setMessage(message);
   };
 
   return (
-    <PanelCard panelSx={{ height: 450 }} message={message}>
-      {isLoadingPet ? (
-        <CircularProgress />
-      ) : pet ? (
-        <Stack gap={2}>
-          <PetInfoCard
-            petInfo={{
-              name: pet.name,
-              health: pet.health,
-              hunger: pet.hunger,
-              mood: pet.mood,
-            }}
-          />
-          <Stack direction="row" gap={1}>
-            <Button variant="contained" onClick={handleSettings}>
-              Settings
-            </Button>
-            <Button variant="outlined" onClick={handleSignOut}>
-              Sign Out
-            </Button>
+    <AnimatedBackground animated={animatedBg}>
+      <PanelCard panelSx={{ height: 450 }} message={message}>
+        {isLoadingPet ? (
+          <CircularProgress />
+        ) : pet ? (
+          <Stack gap={2}>
+            <PetInfoCard
+              petInfo={{
+                name: pet.name,
+                health: pet.health,
+                hunger: pet.hunger,
+                mood: pet.mood,
+              }}
+            />
+            <Stack direction="row" gap={1}>
+              <Button variant="contained" onClick={handleSettings}>
+                Settings
+              </Button>
+              <Button variant="outlined" onClick={handleSignOut}>
+                Sign Out
+              </Button>
+            </Stack>
           </Stack>
-        </Stack>
-      ) : (
-        <PetCreationForm user={user} onSubmitPetForm={handleSubmitPetForm} />
-      )}
-    </PanelCard>
+        ) : (
+          <PetCreationForm user={user} onSubmitPetForm={handleSubmitPetForm} />
+        )}
+        <SettingsMenu
+          open={settingsOpen}
+          onClose={handleSettingsClose}
+          emailEnabled={emailEnabled}
+          onEmailToggle={handleEmailToggle}
+          animatedBg={animatedBg}
+          onBgToggle={handleBgToggle}
+        />
+      </PanelCard>
+    </AnimatedBackground>
   );
 };
