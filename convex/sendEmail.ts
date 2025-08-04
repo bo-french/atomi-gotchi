@@ -29,7 +29,7 @@ export const sendEmail = action({
 
     try {
       const { data, error } = await resend.emails.send({
-        from: "Virtual Pet <atomigotchi.atomicobject.com>",
+        from: "Virtual Pet <yourpet@atomigotchi.atomicobject.com>",
         to: [args.email],
         subject: args.subject || "Hello from your Virtual Pet! 🐾",
         html: args.message || emailTemplates.default,
