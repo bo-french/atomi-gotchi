@@ -9,7 +9,7 @@ import { set } from "react-hook-form";
 import {
   Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import { Panel } from "@/components/Panel";
 const choices = [
   { name: "rock", img: "/rps/rock1.png" },
   { name: "paper", img: "/rps/paper.png" },
@@ -157,7 +157,15 @@ export const RockPaperScissors = () => {
 
   return (
     <div style={{ textAlign: "center" }}>
-        
+        <Panel
+          sx={{
+            width: 600,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
       <Box sx={{ width: 400, mx: "auto", mb: 1 }}>
         <Box sx={{ mb: 1 }}>
           <Pet mood={petMood} />
@@ -296,7 +304,7 @@ export const RockPaperScissors = () => {
     </Button>
   </DialogActions>
 </Dialog>
-
+</Panel>
     </div>
   );
 };
