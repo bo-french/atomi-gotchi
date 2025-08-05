@@ -9,6 +9,7 @@ import { set } from "react-hook-form";
 import {
   Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Panel } from "@/components/Panel";
 
 const choices = [
   { name: "rock", img: "/rps/rock1.png" },
@@ -156,6 +157,15 @@ export const RockPaperScissors = () => {
   else if (health <= 60) healthColor = "#ff9800";
 
   return (
+        <Panel
+          sx={{
+            width: 600,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
     <div style={{ textAlign: "center" }}>
         
       <Box sx={{ width: 400, mx: "auto", mb: 1 }}>
@@ -298,5 +308,6 @@ export const RockPaperScissors = () => {
 </Dialog>
 
     </div>
+    </Panel>
   );
 };
